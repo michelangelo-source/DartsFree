@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "dartsfree",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -18,7 +17,6 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.gacekt.DartsFree"
     },
@@ -41,7 +39,10 @@
         }
       ],
       "expo-web-browser",
-      "expo-build-properties"
+      "expo-build-properties",
+      "expo-font",
+      "expo-image",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
