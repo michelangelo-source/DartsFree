@@ -17,7 +17,7 @@ export const MenuButton = ({ href, label, icon }: MenuButtonProps) => {
           style={StyleSheet.flatten([styles.button, commonStyles.glassPanel])}
         >
           <View style={styles.iconContainer}>{icon}</View>
-          <Text style={styles.text}>{label}</Text>
+          <Text style={commonStyles.text}>{label}</Text>
         </Pressable>
       </Link>
     </View>
@@ -43,8 +43,5 @@ const styles = StyleSheet.create({
     left: 20,
     justifyContent: "center",
     alignItems: "center",
-  },
-  text: {
-    fontSize: 20,
   },
 });

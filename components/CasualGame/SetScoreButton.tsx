@@ -12,7 +12,7 @@ export default function SetScoreButton({ target, setTarget }: ScorePanelProps) {
       onPress={() => setTarget(target)}
       style={[styles.score, commonStyles.glassPanel]}
     >
-      <Text style={styles.scoreText}>{target}</Text>
+      <Text style={[styles.scoreText, commonStyles.text]}>{target}</Text>
     </Pressable>
   );
 }
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   scoreText: {
-    fontSize: 25,
     color: "black",
   },
 });

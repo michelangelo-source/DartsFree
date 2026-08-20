@@ -39,7 +39,7 @@ const CasualGames = () => {
       addPlayer({
         name: nickname,
         score: 0,
-        avg: 0,
+        wins: 0,
         dartsThrown: 0,
         history: [],
       });
@@ -55,8 +55,8 @@ const CasualGames = () => {
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <Text style={styles.title}>Game Setup</Text>
-      <View style={{ flexDirection: "row" }}>
+      <Text style={commonStyles.title}>Game Setup</Text>
+      <View style={commonStyles.row}>
         <SetScoreButton target={301} setTarget={setTarget} />
         <SetScoreButton target={501} setTarget={setTarget} />
         <SetScoreButton target={701} setTarget={setTarget} />
@@ -67,15 +67,20 @@ const CasualGames = () => {
           const onlyNumbers = value.replace(/[^0-9]/g, "");
           setTarget(Number(onlyNumbers));
         }}
-        style={[styles.input, commonStyles.glassPanel]}
+        style={[styles.input, commonStyles.glassPanel, commonStyles.text]}
         keyboardType="number-pad"
       />
       {/*to do here: single or double checkout */}
-      <View style={{ flexDirection: "row" }}>
+      <View style={commonStyles.row}>
         <TextInput
           defaultValue={newUser}
           onChangeText={setNewUser}
-          style={[{ flex: 1 }, styles.input, commonStyles.glassPanel]}
+          style={[
+            { flex: 1 },
+            styles.input,
+            commonStyles.glassPanel,
+            commonStyles.text,
+          ]}
           placeholder="Insert player"
           placeholderTextColor="gray"
           onEndEditing={() => handleAddPlayer(newUser)}
@@ -108,7 +113,7 @@ const CasualGames = () => {
             commonStyles.glassPanel,
           ])}
         >
-          <Text style={{ fontSize: 25 }}>Start</Text>
+          <Text style={commonStyles.text}>Start</Text>
         </Pressable>
       </Link>
     </View>
@@ -117,13 +122,8 @@ const CasualGames = () => {
 export default CasualGames;
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 40,
-  },
-
   input: {
     height: 50,
-    fontSize: 25,
     margin: 10,
     alignSelf: "stretch",
     color: "black",

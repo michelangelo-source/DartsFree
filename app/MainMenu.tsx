@@ -1,10 +1,7 @@
 import DartIcon from "@/assets/icons/dartIcon.svg";
 import DartInTheBoard from "@/assets/icons/dartInTheBoard.svg";
 import ThrowingMan from "@/assets/icons/throwingMan.svg";
-import {
-  MenuButton,
-  MenuButtonProps,
-} from "@/components/menuButtons/MenuButton";
+import { MenuButton, MenuButtonProps } from "@/components/MainMenu/MenuButton";
 import { commonStyles } from "@/styles/commonStyle";
 import { Trophy } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
@@ -31,7 +28,7 @@ const MainMenu = () => (
   <View style={styles.container}>
     <View style={[styles.titleContainer, commonStyles.glassPanel]}>
       <DartIcon width={40} height={40} strokeWidth={1.2} />
-      <Text style={styles.title}> Darts Free</Text>
+      <Text style={commonStyles.title}> Darts Free</Text>
     </View>
 
     {menuButtons.map((button) => (
@@ -60,5 +57,4 @@ const styles = StyleSheet.create({
 
     padding: 15,
   },
-  title: { fontSize: 40 },
 });
