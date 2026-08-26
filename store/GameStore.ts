@@ -51,13 +51,13 @@ export const useGameStore = create<Game>()((set, get, store) => ({
     })),
 
   nextLeg: (winnerName: string) => {
-    const resetPlayers = get().players.map((player) => {
-      player.history = [];
-      player.score = 0;
-      player.dartsThrown = 0;
-      if (player.name === winnerName) player.wins++;
-      return player;
-    });
+    const resetPlayers = get().players.map((player) => ({
+      ...player,
+      history: [],
+      score: 0,
+      dartsThrown: 0,
+      wins: player.name === winnerName ? player.wins + 1 : player.wins,
+    }));
     const firstPlayer = resetPlayers.shift();
     if (!firstPlayer) return;
     resetPlayers.push(firstPlayer);

@@ -1,0 +1,35 @@
+name: Commit Checks
+
+on:
+  push:
+    branches-ignore:
+      - "master"
+      - "main"
+      - "develop"
+
+jobs:
+  code-quality:
+    name: Lint, Type Check and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Linter (ESLint)
+        run: npm run lint
+
+      - name: Run Type Check (TypeScript)
+        run: npx tsc --noEmit
+
+      - name: Run Tests (Jest)
+        run: npm run test

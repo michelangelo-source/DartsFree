@@ -17,8 +17,14 @@ import Toast from "react-native-toast-message";
 
 const CasualGames = () => {
   const [newUser, setNewUser] = useState("");
-  const { target, setTarget, players, addPlayer, deletePlayer } =
-    useGameStore();
+  const {
+    target,
+    setTarget,
+    players,
+    addPlayer,
+    deletePlayer,
+    lastDartMultiplier,
+  } = useGameStore();
   const [currentGamePlayers, setCurrentGamePlayers] = useState(
     new Set(players.flatMap((player) => player.name)),
   );
@@ -62,10 +68,21 @@ const CasualGames = () => {
         <SetScoreButton target={701} setTarget={setTarget} />
       </View>
       <TextInput
+        testID="target-input"
         value={target.toString()}
         onChangeText={(value) => {
           const onlyNumbers = value.replace(/[^0-9]/g, "");
           setTarget(Number(onlyNumbers));
+        }}
+        onEndEditing={() => {
+          if (target < lastDartMultiplier) {
+            Toast.show({
+              type: "error",
+              text1: "Target too low",
+              text2: `For this mode, the target must be at least ${lastDartMultiplier}.`,
+            });
+            setTarget(lastDartMultiplier);
+          }
         }}
         style={[styles.input, commonStyles.glassPanel, commonStyles.text]}
         keyboardType="number-pad"
@@ -108,6 +125,7 @@ const CasualGames = () => {
       </View>
       <Link href={"/Game"} disabled={players.length < 2} asChild>
         <Pressable
+          testID="start-button"
           style={StyleSheet.flatten([
             styles.startGameBtn,
             commonStyles.glassPanel,

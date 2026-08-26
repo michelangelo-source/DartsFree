@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BustBar Component matches snapshot 1`] = `
+<View
+  style={
+    [
+      {
+        "width": 730,
+      },
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgba(224, 224, 224, 0.95)",
+        "borderRadius": 10,
+        "height": 50,
+        "justifyContent": "center",
+        "left": 0,
+        "margin": 10,
+        "position": "absolute",
+        "zIndex": 100,
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "color": "rgb(92, 89, 89) ",
+        },
+        {
+          "fontSize": 32,
+        },
+      ]
+    }
+  >
+    BUST
+  </Text>
+</View>
+`;
