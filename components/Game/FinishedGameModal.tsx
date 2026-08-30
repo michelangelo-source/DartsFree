@@ -1,4 +1,5 @@
 import { Player, useGameStore } from "@/store/GameStore";
+import { useTournamentStore } from "@/store/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router } from "expo-router";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
@@ -23,6 +24,7 @@ export const FinishedGameModal = ({
   setOpen,
 }: FinishedGameModalProps) => {
   const { nextLeg, quitGame } = useGameStore();
+  const { isStarted } = useTournamentStore();
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
       <View style={styles.centeredView}>
@@ -36,6 +38,7 @@ export const FinishedGameModal = ({
             Darts Thrown: {winner.dartsThrown}
           </Text>
           <View style={styles.btnContainer}>
+            {/* zestaw guzików do naspenego meczu lub zoabczyć turniej */}
             <Pressable
               onPress={() => {
                 setOpen(!open);
@@ -46,6 +49,7 @@ export const FinishedGameModal = ({
             >
               <Text style={commonStyles.text}>Quit Game</Text>
             </Pressable>
+
             <Pressable
               onPress={() => {
                 nextLeg(winner.name);

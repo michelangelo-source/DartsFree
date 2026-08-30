@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   playerItem: {
     backgroundColor: "black",
     height: 50,
-    width: "30%",
+    width: 100,
     justifyContent: "space-evenly",
     marginLeft: 10,
     marginBottom: 10,
