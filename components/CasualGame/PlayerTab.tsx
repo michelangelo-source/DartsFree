@@ -26,7 +26,11 @@ export const PlayerTab = ({ player, handleDeletePlayer }: PlayerTabProps) => {
         { width: width / 3 - 13 },
       ]}
     >
-      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.playerText}>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={[styles.playerText, commonStyles.adjustableFontSize]}
+      >
         {player.name}
       </Text>
       <Pressable onPress={() => handleDeletePlayer(player.name)}>
@@ -49,8 +53,5 @@ const styles = StyleSheet.create({
   playerText: {
     width: "80%",
     height: "100%",
-    textAlign: "center",
-    fontSize: 100,
-    textAlignVertical: "center",
   },
 });

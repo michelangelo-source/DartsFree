@@ -18,4 +18,9 @@ export const commonStyles = StyleSheet.create({
   text: {
     fontSize: 25,
   },
+  adjustableFontSize: {
+    textAlign: "center",
+    fontSize: 100,
+    textAlignVertical: "center",
+  },
 });

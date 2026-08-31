@@ -1,5 +1,5 @@
 import { Player, useGameStore } from "@/store/GameStore";
-import { useTournamentStore } from "@/store/TournamentStore";
+import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router } from "expo-router";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";

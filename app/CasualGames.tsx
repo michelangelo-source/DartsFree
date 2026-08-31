@@ -16,7 +16,7 @@ const CasualGames = () => {
   } = useGameStore();
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <View style={styles.container}>
       <Text style={commonStyles.title}>Game Setup</Text>
       <ManageScore
         lastDartMultiplier={lastDartMultiplier}
@@ -46,6 +46,10 @@ const CasualGames = () => {
 export default CasualGames;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   startGameBtn: {
     height: 50,
     margin: 10,

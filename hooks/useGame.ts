@@ -1,5 +1,5 @@
 import { SingleScore, useGameStore, VisitScore } from "@/store/GameStore";
-import { useTournamentStore } from "@/store/TournamentStore";
+import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 
