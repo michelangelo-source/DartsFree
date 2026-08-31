@@ -1,4 +1,5 @@
 import { Player, useGameStore } from "@/store/GameStore";
+import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router } from "expo-router";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
@@ -23,6 +24,7 @@ export const FinishedGameModal = ({
   setOpen,
 }: FinishedGameModalProps) => {
   const { nextLeg, quitGame } = useGameStore();
+  const { isStarted, startMatch } = useTournamentStore();
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
       <View style={styles.centeredView}>
@@ -36,26 +38,55 @@ export const FinishedGameModal = ({
             Darts Thrown: {winner.dartsThrown}
           </Text>
           <View style={styles.btnContainer}>
-            <Pressable
-              onPress={() => {
-                setOpen(!open);
-                router.navigate("/MainMenu");
-                quitGame();
-              }}
-              style={styles.quitBtn}
-            >
-              <Text style={commonStyles.text}>Quit Game</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                nextLeg(winner.name);
-                resetOrder();
-                setOpen(!open);
-              }}
-              style={styles.nextBtn}
-            >
-              <Text style={commonStyles.text}>Next Leg</Text>
-            </Pressable>
+            {isStarted ? (
+              <>
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    router.navigate("/Tournament");
+                    quitGame();
+                  }}
+                  style={styles.bracketBtn}
+                >
+                  <Text style={commonStyles.text}>See Bracket</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    quitGame();
+                    setOpen(!open);
+                    startMatch();
+                    router.navigate("/Game");
+                  }}
+                  style={styles.nextMatchBtn}
+                >
+                  <Text style={commonStyles.text}>Next Match</Text>
+                </Pressable>
+              </>
+            ) : (
+              <>
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    router.navigate("/MainMenu");
+                    quitGame();
+                  }}
+                  style={styles.quitBtn}
+                >
+                  <Text style={commonStyles.text}>Quit Game</Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => {
+                    nextLeg(winner.name);
+                    resetOrder();
+                    setOpen(!open);
+                  }}
+                  style={styles.nextLegBtn}
+                >
+                  <Text style={commonStyles.text}>Next Leg</Text>
+                </Pressable>
+              </>
+            )}
           </View>
         </View>
       </View>
@@ -87,7 +118,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
   },
-  nextBtn: {
+
+  bracketBtn: {
+    width: 160,
+    backgroundColor: "rgba(224, 224, 224, 0.95)",
+    margin: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  nextMatchBtn: {
+    width: 150,
+    margin: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.15)",
+    borderColor: "green",
+    borderWidth: 1,
+  },
+  nextLegBtn: {
     width: 130,
     backgroundColor: "rgba(224, 224, 224, 0.95)",
     margin: 10,

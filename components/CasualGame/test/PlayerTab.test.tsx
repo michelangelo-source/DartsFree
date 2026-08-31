@@ -1,12 +1,24 @@
 import { fireEvent, render } from "@testing-library/react-native";
+import React from "react";
 import { Text } from "react-native";
 import { PlayerTab } from "../PlayerTab";
 
-const mockXIcon = () => <Text testID="delete-icon">X</Text>;
+const MockXIcon: React.FC<any> = () => <Text testID="delete-icon">X</Text>;
 
 jest.mock("lucide-react-native", () => ({
-  X: () => mockXIcon(),
+  X: () => MockXIcon({}),
 }));
+
+jest.mock("react-native", () => {
+  const rn = jest.requireActual("react-native");
+  rn.useWindowDimensions = jest.fn(() => ({
+    width: 400,
+    height: 800,
+    scale: 1,
+    fontScale: 1,
+  }));
+  return rn;
+});
 
 describe("PlayerTab Component", () => {
   const mockHandleDeletePlayer = jest.fn();
