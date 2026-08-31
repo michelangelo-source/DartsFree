@@ -13,7 +13,6 @@ import Animated, {
   useScrollOffset,
 } from "react-native-reanimated";
 
-//testy
 const Tournament = () => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
 

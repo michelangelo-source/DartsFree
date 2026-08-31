@@ -1,4 +1,5 @@
 import { useGameStore } from "@/store/GameStore";
+import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { act, renderHook } from "@testing-library/react-native";
 import { useGame } from "../useGame";
 
@@ -6,8 +7,13 @@ jest.mock("@/store/GameStore", () => ({
   useGameStore: jest.fn(),
 }));
 
+jest.mock("@/store/Tournament/TournamentStore", () => ({
+  useTournamentStore: jest.fn(),
+}));
+
 describe("useGame Hook", () => {
   let mockUpdatePlayer: jest.Mock;
+  let mockSetWinner: jest.Mock;
 
   const mockPlayers = [
     { name: "Player 1", score: 0, dartsThrown: 0, history: [] },
@@ -17,12 +23,18 @@ describe("useGame Hook", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUpdatePlayer = jest.fn();
+    mockSetWinner = jest.fn();
 
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
       lastDartMultiplier: 2,
       players: mockPlayers,
       updatePlayer: mockUpdatePlayer,
+    });
+
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      isStarted: false,
+      setWinner: mockSetWinner,
     });
   });
 
@@ -76,7 +88,7 @@ describe("useGame Hook", () => {
     expect(result.current.bust).toBe(true);
   });
 
-  it("addScore should set finished = true if the player perfectly hits the target with the correct multiplier", async () => {
+  it("addScore should set finished = true if the player perfectly hits the target in Casual Mode", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 50,
       lastDartMultiplier: 2,
@@ -98,6 +110,37 @@ describe("useGame Hook", () => {
         score: 50,
       }),
     );
+    expect(mockSetWinner).not.toHaveBeenCalled();
+  });
+
+  it("addScore should set finished = true and call setWinner if the player perfectly hits the target in Tournament Mode", async () => {
+    (useGameStore as unknown as jest.Mock).mockReturnValue({
+      target: 50,
+      lastDartMultiplier: 2,
+      players: [
+        { id: "1", name: "Player 1", score: 10, dartsThrown: 3, history: [] },
+      ],
+      updatePlayer: mockUpdatePlayer,
+    });
+
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      isStarted: true,
+      setWinner: mockSetWinner,
+    });
+
+    const { result } = await renderHook(() => useGame());
+
+    await act(() => {
+      result.current.addScore(20, 2);
+    });
+
+    expect(result.current.finished).toBe(true);
+    expect(mockUpdatePlayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        score: 50,
+      }),
+    );
+    expect(mockSetWinner).toHaveBeenCalledWith(1);
   });
 
   it("classicScore should set 26 points (1, 5, 20) and 3 throws", async () => {

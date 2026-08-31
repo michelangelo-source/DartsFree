@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
-import MainMenu from "../MainMenu"; // Upewnij się, że ścieżka jest poprawna
+import MainMenu from "../MainMenu";
 
 jest.mock("expo-router", () => ({
   Link: ({ children }: { children: React.ReactNode }) => children,

@@ -184,7 +184,6 @@ export const Bracket = ({
   );
 };
 
-// --- STYLE ---
 const styles = StyleSheet.create({
   container: {
     width: "100%",
