@@ -1,4 +1,5 @@
 import { SingleScore, useGameStore, VisitScore } from "@/store/GameStore";
+import { useTournamentStore } from "@/store/TournamentStore";
 import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 
@@ -26,6 +27,7 @@ const getNumericScore = (score: SingleScore | null): number => {
 
 export const useGame = () => {
   const { target, lastDartMultiplier, players, updatePlayer } = useGameStore();
+  const { isStarted, setWinner } = useTournamentStore();
   const playersListRef = useRef<FlatList>(null);
 
   const [finished, setFinished] = useState(false);
@@ -106,6 +108,9 @@ export const useGame = () => {
           secondThrow: null,
           thirdThrow: null,
         });
+        if (isStarted) {
+          setWinner((currentPlayerIndex + 1) as 1 | 2);
+        }
         setFinished(true);
         return;
       }

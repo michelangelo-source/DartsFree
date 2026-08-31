@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/refs */
 import { ManagePlayers } from "@/components/SetupGame/ManagePlayers";
 import { ManageScore } from "@/components/SetupGame/ManageScore";
-import { useGameStore } from "@/store/GameStore";
 import { TournamentMatch, useTournamentStore } from "@/store/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router } from "expo-router/build/global-state/router";
@@ -18,6 +17,8 @@ import Animated, {
   withDecay,
 } from "react-native-reanimated";
 
+//refactor
+//testy
 const Tournament = () => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
 
@@ -25,18 +26,18 @@ const Tournament = () => {
 
   const { height, width } = useWindowDimensions();
   const {
+    readyToStart,
     lastDartMultiplier,
     target,
     tournamentMatches,
     tournamentParticipants,
     isStarted,
     setTournamentTarget,
-    startTournament,
+    startMatch,
     addTournamentParticipants,
     deleteTournamentParticipants,
     randomizeTournament,
   } = useTournamentStore();
-  const { setTarget, addPlayer, quitGame } = useGameStore();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -46,17 +47,23 @@ const Tournament = () => {
 
   const BASE_HEIGHT = height * 0.8;
   const matchHeight = 60;
-  const matchMargin = 16;
-  const MAP_WIDTH = (tournamentMatches.at(-1)?.round ?? 0) * 130 - 30 + 100;
+  const matchHeightMargin = 16;
+  const matchWidth = 130;
+  const matchWidthMargin = 30;
+  const maxRound = tournamentMatches.at(-1)?.round ?? 0;
+  const MAP_WIDTH =
+    maxRound * matchWidth + (maxRound - 1) * matchWidthMargin + 100;
   const MAP_HEIGHT =
     Math.ceil(tournamentMatches.length / 2) * matchHeight +
-    (Math.ceil(tournamentMatches.length / 2) - 1) * matchMargin +
+    (Math.ceil(tournamentMatches.length / 2) - 1) * matchHeightMargin +
     100;
 
-  const MIN_X = Math.min(0, width - MAP_WIDTH);
+  const EXTRA_SCROLL_SPACE = 20;
+
+  const MIN_X = Math.min(0, width - MAP_WIDTH - EXTRA_SCROLL_SPACE);
   const MAX_X = 0;
 
-  const MIN_Y = Math.min(0, BASE_HEIGHT - MAP_HEIGHT);
+  const MIN_Y = Math.min(0, BASE_HEIGHT - MAP_HEIGHT - EXTRA_SCROLL_SPACE);
   const MAX_Y = 0;
 
   const panGesture = Gesture.Pan()
@@ -106,14 +113,14 @@ const Tournament = () => {
 
     return (
       Math.pow(2, round - 2) * matchHeight +
-      (Math.pow(2, round - 2) - 1) * matchMargin +
-      matchMargin / 2 -
+      (Math.pow(2, round - 2) - 1) * matchHeightMargin +
+      matchHeightMargin / 2 -
       matchHeight / 2
     );
   };
   const calculateMatchSpacing = (round: number, index: number) => {
     if (round === 1) {
-      return index * (matchHeight + matchMargin);
+      return index * (matchHeight + matchHeightMargin);
     }
     const prevMatches = getPreviousMatchesCount(
       round,
@@ -121,7 +128,7 @@ const Tournament = () => {
     );
     return (
       matchHeight * Math.pow(2, round - 1) * (index - prevMatches) +
-      matchMargin * Math.pow(2, round - 1) * (index - prevMatches)
+      matchHeightMargin * Math.pow(2, round - 1) * (index - prevMatches)
     );
   };
 
@@ -130,28 +137,17 @@ const Tournament = () => {
 
     return totalMatches + 1 - (totalMatches + 1) / Math.pow(2, round - 1);
   };
-  // const { setTarget, addPlayer, quitGame } = useGameStore();
   const handleStart = (match?: TournamentMatch) => {
-    quitGame();
-    setTarget(target);
-    if (match) {
-      if (match.player1) addPlayer(match.player1);
-      if (match.player2) addPlayer(match.player2);
-    } else {
-      const nextMatch = tournamentMatches.find(
-        (match) => match.player1 && match.player2 && !match.winner,
-      );
-      if (nextMatch) {
-        if (nextMatch.player1) addPlayer(nextMatch.player1);
-        if (nextMatch.player2) addPlayer(nextMatch.player2);
-      }
-    }
-    startTournament();
+    startMatch(match);
     router.navigate("/Game");
   };
 
   return (
-    <Animated.ScrollView ref={scrollViewRef}>
+    <Animated.ScrollView
+      ref={scrollViewRef}
+      contentContainerStyle={{ alignItems: "center" }}
+      keyboardShouldPersistTaps="handled"
+    >
       <Text style={commonStyles.title}>Tournament</Text>
       {!isStarted && (
         <>
@@ -170,24 +166,61 @@ const Tournament = () => {
         </>
       )}
 
-      <View
-        style={{
-          justifyContent: "center",
-          alignContent: "center",
-          margin: 10,
-        }}
-      >
-        <Pressable
-          onPress={randomizeTournament}
-          style={[
-            { height: 50, justifyContent: "center", alignItems: "center" },
-            commonStyles.glassPanel,
-          ]}
-        >
-          <Text style={commonStyles.text}>Randomize Bracket</Text>
-        </Pressable>
-      </View>
+      <View style={[commonStyles.row, { paddingHorizontal: 5 }]}>
+        {!isStarted && (
+          <View
+            style={{
+              flex: 1,
+              margin: 5,
+              justifyContent: "center",
+            }}
+          >
+            <Pressable
+              disabled={tournamentParticipants.length < 2}
+              onPress={() => {
+                randomizeTournament();
+              }}
+              style={[
+                {
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "green",
+                  borderWidth: readyToStart ? 0 : 2,
+                },
+                commonStyles.glassPanel,
+              ]}
+            >
+              <Text style={[commonStyles.text, { textAlign: "center" }]}>
+                Shuffle
+              </Text>
+            </Pressable>
+          </View>
+        )}
 
+        {readyToStart && (
+          <View style={{ flex: 1, margin: 5, justifyContent: "center" }}>
+            <Pressable
+              disabled={tournamentParticipants.length < 2}
+              onPress={() => handleStart()}
+              style={[
+                {
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "green",
+                  borderWidth: 2,
+                },
+                commonStyles.glassPanel,
+              ]}
+            >
+              <Text style={[commonStyles.text, { textAlign: "center" }]}>
+                Next Match
+              </Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
       <View
         style={{
           height: BASE_HEIGHT,
@@ -203,6 +236,7 @@ const Tournament = () => {
                   width: MAP_WIDTH,
                   height: MAP_HEIGHT,
                   position: "relative",
+                  margin: 10,
                 },
                 commonStyles.glassPanel,
                 animatedContentStyle,
@@ -215,12 +249,14 @@ const Tournament = () => {
                     style={[
                       {
                         position: "absolute",
-                        left: (match.round - 1) * 130 + 50,
+                        left:
+                          (match.round - 1) * (matchWidth + matchWidthMargin) +
+                          50,
                         top:
                           50 +
                           calculateTopStartingPosition(match.round) +
                           calculateMatchSpacing(match.round, index),
-                        width: 100,
+                        width: matchWidth,
                         flexDirection: "row",
                       },
                       commonStyles.glassPanel,
@@ -228,28 +264,47 @@ const Tournament = () => {
                   >
                     <View style={{ flex: 1 }}>
                       <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
                         style={{
+                          color: match.winner === 1 ? "green" : "black",
                           height: matchHeight / 2,
                           borderBottomWidth: 1,
+                          textAlignVertical: "center",
+                          textAlign: "center",
+                          fontSize: 100,
                         }}
                       >
                         {match.player1?.name}
                       </Text>
-                      <Text style={{ height: matchHeight / 2 }}>
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        style={{
+                          color: match.winner === 2 ? "green" : "black",
+                          height: matchHeight / 2,
+                          textAlignVertical: "center",
+                          textAlign: "center",
+                          fontSize: 100,
+                        }}
+                      >
                         {match.player2?.name}
                       </Text>
                     </View>
-                    {match.player1 && match.player2 && !match.winner && (
-                      <Pressable
-                        onPress={() => handleStart(match)}
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Play color={"green"} />
-                      </Pressable>
-                    )}
+                    {match.player1 &&
+                      match.player2 &&
+                      !match.winner &&
+                      readyToStart && (
+                        <Pressable
+                          onPress={() => handleStart(match)}
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Play color={"green"} />
+                        </Pressable>
+                      )}
                   </View>
                 );
               })}
