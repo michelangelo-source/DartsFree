@@ -1,9 +1,10 @@
 import { BustBar } from "@/components/Game/BustBar";
-import { FinishedGameModal } from "@/components/Game/FinishedGameModal";
 import { NonStandardScorePanel } from "@/components/Game/NonStandardScorePanel";
 import { PlayerCard } from "@/components/Game/PlayerCard";
 import { ScorePanel } from "@/components/Game/ScorePanel";
 import { ScorePreviewPanel } from "@/components/Game/ScorePreviewPanel";
+import { ExitGameModal } from "@/components/Modals/ExitGameModal";
+import { FinishedGameModal } from "@/components/Modals/FinishedGameModal";
 import { useGame } from "@/hooks/useGame";
 import { commonStyles } from "@/styles/commonStyle";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
@@ -81,6 +82,7 @@ const Game = () => {
         resetOrder={() => setCurrentPlayerIndex(0)}
         winner={currentPlayer}
       />
+      <ExitGameModal />
     </View>
   );
 };

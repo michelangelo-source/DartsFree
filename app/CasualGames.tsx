@@ -4,6 +4,7 @@ import { useGameStore } from "@/store/GameStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
 
 const CasualGames = () => {
   const {
@@ -13,7 +14,14 @@ const CasualGames = () => {
     addPlayer,
     deletePlayer,
     lastDartMultiplier,
+    quitGame,
   } = useGameStore();
+
+  useEffect(() => {
+    return () => {
+      quitGame();
+    };
+  }, [quitGame]);
 
   return (
     <View style={styles.container}>

@@ -80,6 +80,25 @@ describe("TournamentStore", () => {
     expect(useTournamentStore.getState().target).toBe(301);
   });
 
+  it("resetTournament should reset state to initial state", () => {
+    act(() => {
+      useTournamentStore.getState().setTournamentTarget(301);
+      useTournamentStore.getState().addTournamentParticipants(mockPlayer1);
+    });
+
+    act(() => {
+      useTournamentStore.getState().resetTournament();
+    });
+
+    const state = useTournamentStore.getState();
+    expect(state.readyToStart).toBe(false);
+    expect(state.target).toBe(501);
+    expect(state.isStarted).toBe(false);
+    expect(state.tournamentParticipants).toEqual([]);
+    expect(state.tournamentMatches).toEqual([]);
+    expect(state.currentMatch).toBeNull();
+  });
+
   it("addTournamentParticipants should add a player and set readyToStart to false", () => {
     act(() => {
       useTournamentStore.getState().addTournamentParticipants(mockPlayer1);

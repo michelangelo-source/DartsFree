@@ -32,11 +32,12 @@ type TournamentActions = {
   deleteTournamentParticipants: (playerName: string) => void;
   randomizeTournament: () => void;
   startMatch: (match?: TournamentMatch) => void;
+  resetTournament: () => void;
 };
 
 type Tournament = TournamentState & TournamentActions;
 
-export const useTournamentStore = create<Tournament>()((set, get) => ({
+export const useTournamentStore = create<Tournament>()((set, get, store) => ({
   readyToStart: false,
   target: 501,
   lastDartMultiplier: 2,
@@ -44,6 +45,10 @@ export const useTournamentStore = create<Tournament>()((set, get) => ({
   tournamentParticipants: [],
   tournamentMatches: [],
   currentMatch: null,
+
+  resetTournament: () => {
+    set(store.getInitialState());
+  },
 
   setCurrentMatch: (match: TournamentMatch) =>
     set(() => ({ currentMatch: match })),

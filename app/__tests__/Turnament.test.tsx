@@ -34,6 +34,10 @@ const MockBracket: React.FC<any> = () => (
   <Text testID="bracket-mock">Bracket</Text>
 );
 
+const MockExitGameModal: React.FC<any> = () => (
+  <Text testID="exit-game-modal">Exit</Text>
+);
+
 jest.mock("@/components/SetupGame/ManagePlayers", () => ({
   ManagePlayers: (props: any) => MockManagePlayers(props),
 }));
@@ -44,6 +48,10 @@ jest.mock("@/components/SetupGame/ManageScore", () => ({
 
 jest.mock("@/components/Tournament/Bracket/Bracket", () => ({
   Bracket: (props: any) => MockBracket(props),
+}));
+
+jest.mock("@/components/Modals/ExitGameModal", () => ({
+  ExitGameModal: (props: any) => MockExitGameModal(props),
 }));
 
 jest.mock("expo-router/build/global-state/router", () => ({
@@ -74,6 +82,7 @@ describe("Tournament Screen", () => {
     addTournamentParticipants: mockAddTournamentParticipants,
     deleteTournamentParticipants: mockDeleteTournamentParticipants,
     randomizeTournament: mockRandomizeTournament,
+    resetTournament: jest.fn(),
   };
 
   beforeEach(() => {
@@ -139,5 +148,39 @@ describe("Tournament Screen", () => {
     });
 
     expect(mockRandomizeTournament).toHaveBeenCalledTimes(1);
+  });
+  it("renders ExitGameModal when there are tournament participants", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      tournamentParticipants: [{ name: "Alice", score: 0 }],
+    });
+
+    const { getByTestId } = await render(<Tournament />);
+    expect(getByTestId("exit-game-modal")).toBeTruthy();
+  });
+
+  it("does not render ExitGameModal when there are no tournament participants", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      tournamentParticipants: [],
+    });
+
+    const { queryByTestId } = await render(<Tournament />);
+    expect(queryByTestId("exit-game-modal")).toBeNull();
+  });
+
+  it("calls resetTournament on unmount", async () => {
+    const mockResetTournament = jest.fn();
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      resetTournament: mockResetTournament,
+    });
+
+    const { unmount } = await render(<Tournament />);
+    await act(async () => {
+      unmount();
+    });
+
+    expect(mockResetTournament).toHaveBeenCalled();
   });
 });

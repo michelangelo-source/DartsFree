@@ -163,6 +163,30 @@ describe("useGame Hook", () => {
     });
   });
 
+  it("classicScore should not add score if remaining score is 26 or less", async () => {
+    (useGameStore as unknown as jest.Mock).mockReturnValue({
+      target: 501,
+      lastDartMultiplier: 2,
+      players: [
+        { id: "1", name: "Player 1", score: 480, dartsThrown: 0, history: [] },
+      ],
+      updatePlayer: mockUpdatePlayer,
+    });
+
+    const { result } = await renderHook(() => useGame());
+
+    await act(() => {
+      result.current.classicScore();
+    });
+
+    expect(mockUpdatePlayer).not.toHaveBeenCalled();
+    expect(result.current.currentThrows).toEqual({
+      firstThrow: null,
+      secondThrow: null,
+      thirdThrow: null,
+    });
+  });
+
   it("nextPlayer should change currentPlayerIndex to the next player", async () => {
     const { result } = await renderHook(() => useGame());
 

@@ -20,6 +20,9 @@ const MockScorePanel: React.FC<any> = ({ title }) => (
 const MockFinishedGameModal: React.FC<any> = ({ open }) => (
   <Text testID="finished-modal">{open ? "open" : "closed"}</Text>
 );
+const MockExitGameModal: React.FC<any> = () => (
+  <Text testID="exit-game-modal">Exit</Text>
+);
 
 jest.mock("@/components/Game/PlayerCard", () => ({
   PlayerCard: (props: any) => MockPlayerCard(props),
@@ -36,8 +39,12 @@ jest.mock("@/components/Game/NonStandardScorePanel", () => ({
 jest.mock("@/components/Game/ScorePanel", () => ({
   ScorePanel: (props: any) => MockScorePanel(props),
 }));
-jest.mock("@/components/Game/FinishedGameModal", () => ({
+jest.mock("@/components/Modals/FinishedGameModal", () => ({
   FinishedGameModal: (props: any) => MockFinishedGameModal(props),
+}));
+
+jest.mock("@/components/Modals/ExitGameModal", () => ({
+  ExitGameModal: (props: any) => MockExitGameModal(props),
 }));
 
 jest.mock("@/hooks/useGame", () => ({
@@ -91,6 +98,7 @@ describe("Game Screen", () => {
     expect(getByTestId("score-panel-T-")).toBeTruthy();
 
     expect(queryByTestId("bust-bar")).toBeNull();
+    expect(getByTestId("exit-game-modal")).toBeTruthy();
   });
 
   it("renders BustBar when bust state is true", async () => {

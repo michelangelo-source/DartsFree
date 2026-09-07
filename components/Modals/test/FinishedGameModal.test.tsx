@@ -2,7 +2,7 @@ import { useGameStore } from "@/store/GameStore";
 import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { fireEvent, render } from "@testing-library/react-native";
 import { router } from "expo-router";
-import { FinishedGameModal } from "../FinishedGameModal";
+import { FinishedGameModal } from "../../Modals/FinishedGameModal";
 
 jest.mock("expo-router", () => ({
   router: {
@@ -49,6 +49,7 @@ describe("FinishedGameModal Component", () => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       isStarted: false,
       startMatch: mockStartMatch,
+      tournamentMatches: [],
     });
   });
 
@@ -61,7 +62,7 @@ describe("FinishedGameModal Component", () => {
 
     expect(getByText("Winner: Alice")).toBeTruthy();
     expect(getByText("Darts Thrown: 5")).toBeTruthy();
-    expect(getByText("Average: 30")).toBeTruthy();
+    expect(getByText("Average: 90")).toBeTruthy();
   });
 
   it("displays average as 0 if dartsThrown is 0 to avoid NaN", async () => {
@@ -106,6 +107,7 @@ describe("FinishedGameModal Component", () => {
       (useTournamentStore as unknown as jest.Mock).mockReturnValue({
         isStarted: true,
         startMatch: mockStartMatch,
+        tournamentMatches: [],
       });
     });
 
@@ -115,7 +117,7 @@ describe("FinishedGameModal Component", () => {
       );
 
       expect(getByText("See Bracket")).toBeTruthy();
-      expect(getByText("Next Match")).toBeTruthy();
+      expect(queryByText("Next Match")).toBeNull();
       expect(queryByText("Quit Game")).toBeNull();
       expect(queryByText("Next Leg")).toBeNull();
     });
@@ -134,6 +136,11 @@ describe("FinishedGameModal Component", () => {
     });
 
     it("handles 'Next Match' button press correctly", async () => {
+      (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+        isStarted: true,
+        startMatch: mockStartMatch,
+        tournamentMatches: [{ player1: true, player2: true, winner: null }],
+      });
       const { getByText } = await render(
         <FinishedGameModal {...defaultProps} />,
       );

@@ -1,5 +1,5 @@
 import { useGameStore } from "@/store/GameStore";
-import { render } from "@testing-library/react-native";
+import { render, act } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 import CasualGames from "../CasualGames";
@@ -44,6 +44,7 @@ describe("CasualGames Screen", () => {
       players: [],
       addPlayer: mockAddPlayer,
       deletePlayer: mockDeletePlayer,
+      quitGame: jest.fn(),
     });
   });
 
@@ -77,11 +78,32 @@ describe("CasualGames Screen", () => {
       ],
       addPlayer: mockAddPlayer,
       deletePlayer: mockDeletePlayer,
+      quitGame: jest.fn(),
     });
 
     const { getByTestId } = await render(<CasualGames />);
     const startButton = getByTestId("start-button");
 
     expect(startButton.props.accessibilityState?.disabled).toBeFalsy();
+  });
+
+  it("calls quitGame on unmount", async () => {
+    const mockQuitGame = jest.fn();
+    (useGameStore as unknown as jest.Mock).mockReturnValue({
+      target: 501,
+      lastDartMultiplier: 2,
+      setTarget: mockSetTarget,
+      players: [],
+      addPlayer: mockAddPlayer,
+      deletePlayer: mockDeletePlayer,
+      quitGame: mockQuitGame,
+    });
+
+    const { unmount } = await render(<CasualGames />);
+    await act(async () => {
+      unmount();
+    });
+    
+    expect(mockQuitGame).toHaveBeenCalled();
   });
 });

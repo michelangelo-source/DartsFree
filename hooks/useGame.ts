@@ -54,6 +54,7 @@ export const useGame = () => {
 
   const classicScore = () => {
     if (currentThrows.firstThrow) return;
+    if (target - currentPlayer.score <= 26) return;
 
     setCurrentThrows({
       firstThrow: 1,

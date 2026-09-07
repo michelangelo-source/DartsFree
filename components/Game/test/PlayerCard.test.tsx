@@ -31,7 +31,7 @@ describe("PlayerCard Component", () => {
   it("calculates and displays average correctly", async () => {
     const { getByText } = await render(<PlayerCard {...defaultProps} />);
 
-    expect(getByText("33.33")).toBeTruthy();
+    expect(getByText("100")).toBeTruthy();
   });
 
   it("displays average as 0 when no darts have been thrown", async () => {

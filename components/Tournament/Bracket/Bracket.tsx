@@ -55,11 +55,13 @@ export const Bracket = ({
   const maxRound = tournamentMatches.at(-1)?.round ?? 0;
 
   const MAP_WIDTH =
-    maxRound * MATCH_WIDTH + (maxRound - 1) * MATCH_WIDTH_MARGIN + 100;
+    maxRound * MATCH_WIDTH +
+    (maxRound - 1) * MATCH_WIDTH_MARGIN +
+    2 * MAP_PADDING;
   const MAP_HEIGHT =
     Math.ceil(totalMatchesLength / 2) * MATCH_HEIGHT +
     (Math.ceil(totalMatchesLength / 2) - 1) * MATCH_HEIGHT_MARGIN +
-    100;
+    2 * MAP_PADDING;
 
   const MIN_X = Math.min(0, width - MAP_WIDTH - EXTRA_SCROLL_SPACE);
   const MAX_X = 0;
