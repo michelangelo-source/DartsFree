@@ -1,3 +1,4 @@
+import { ExitGameModal } from "@/components/Modals/ExitGameModal";
 import { ManagePlayers } from "@/components/SetupGame/ManagePlayers";
 import { ManageScore } from "@/components/SetupGame/ManageScore";
 import { Bracket } from "@/components/Tournament/Bracket/Bracket";
@@ -7,6 +8,7 @@ import {
 } from "@/store/Tournament/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router } from "expo-router/build/global-state/router";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedRef,
@@ -29,7 +31,14 @@ const Tournament = () => {
     addTournamentParticipants,
     deleteTournamentParticipants,
     randomizeTournament,
+    resetTournament,
   } = useTournamentStore();
+
+  useEffect(() => {
+    return () => {
+      resetTournament();
+    };
+  }, [resetTournament]);
 
   const handleStart = (match?: TournamentMatch) => {
     startMatch(match);
@@ -96,6 +105,7 @@ const Tournament = () => {
         scrollY={scrollY}
         handleStart={handleStart}
       />
+      {!!tournamentParticipants.length && <ExitGameModal />}
     </Animated.ScrollView>
   );
 };

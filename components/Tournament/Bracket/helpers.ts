@@ -3,7 +3,7 @@ export const MATCH_HEIGHT_MARGIN = 16;
 export const MATCH_WIDTH = 130;
 export const MATCH_WIDTH_MARGIN = 30;
 export const EXTRA_SCROLL_SPACE = 20;
-export const MAP_PADDING = 50;
+export const MAP_PADDING = 30;
 
 const getPreviousMatchesCount = (round: number, totalMatches: number) => {
   if (round <= 1) return 0;

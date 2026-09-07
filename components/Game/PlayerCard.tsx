@@ -30,7 +30,7 @@ export const PlayerCard = ({
       </View>
       <Text style={commonStyles.subTitle}>{target - player.score}</Text>
       <Text>
-        {Math.round((player.score / player.dartsThrown) * 100) / 100 || 0}
+        {Math.round(((player.score / player.dartsThrown) * 3) * 100) / 100 || 0}
       </Text>
     </View>
   );

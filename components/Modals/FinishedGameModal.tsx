@@ -24,7 +24,10 @@ export const FinishedGameModal = ({
   setOpen,
 }: FinishedGameModalProps) => {
   const { nextLeg, quitGame } = useGameStore();
-  const { isStarted, startMatch } = useTournamentStore();
+  const { isStarted, startMatch, tournamentMatches } = useTournamentStore();
+  
+  const hasNextMatch = isStarted && tournamentMatches.some((m) => m.player1 && m.player2 && !m.winner);
+
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
       <View style={styles.centeredView}>
@@ -32,7 +35,7 @@ export const FinishedGameModal = ({
           <Text style={commonStyles.text}>Winner: {winner.name}</Text>
           <Text style={commonStyles.text}>
             Average:{" "}
-            {Math.round((winner.score / winner.dartsThrown) * 100) / 100 || 0}
+            {Math.round(((winner.score / winner.dartsThrown) * 3) * 100) / 100 || 0}
           </Text>
           <Text style={commonStyles.text}>
             Darts Thrown: {winner.dartsThrown}
@@ -50,17 +53,19 @@ export const FinishedGameModal = ({
                 >
                   <Text style={commonStyles.text}>See Bracket</Text>
                 </Pressable>
-                <Pressable
-                  onPress={() => {
-                    quitGame();
-                    setOpen(!open);
-                    startMatch();
-                    router.navigate("/Game");
-                  }}
-                  style={styles.nextMatchBtn}
-                >
-                  <Text style={commonStyles.text}>Next Match</Text>
-                </Pressable>
+                {hasNextMatch && (
+                  <Pressable
+                    onPress={() => {
+                      quitGame();
+                      setOpen(!open);
+                      startMatch();
+                      router.navigate("/Game");
+                    }}
+                    style={styles.nextMatchBtn}
+                  >
+                    <Text style={commonStyles.text}>Next Match</Text>
+                  </Pressable>
+                )}
               </>
             ) : (
               <>
