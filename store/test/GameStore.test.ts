@@ -37,6 +37,11 @@ describe("GameStore", () => {
     expect(useGameStore.getState().target).toBe(301);
   });
 
+  it("setLastDartMultiplier", () => {
+    useGameStore.getState().setLastDartMultiplier(1);
+    expect(useGameStore.getState().lastDartMultiplier).toBe(1);
+  });
+
   it("addPlayer", () => {
     useGameStore.getState().addPlayer(player1);
     const { players } = useGameStore.getState();

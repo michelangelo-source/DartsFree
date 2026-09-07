@@ -32,6 +32,7 @@ const Tournament = () => {
     deleteTournamentParticipants,
     randomizeTournament,
     resetTournament,
+    setLastDartMultiplier,
   } = useTournamentStore();
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const Tournament = () => {
         <>
           <ManageScore
             lastDartMultiplier={lastDartMultiplier}
+            setLastDartMultiplier={setLastDartMultiplier}
             target={target}
             setTarget={setTournamentTarget}
           />

@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@expo/ui": "~57.0.9",
+    "@expo/ui": "~57.0.16",
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
