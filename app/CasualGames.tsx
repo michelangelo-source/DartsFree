@@ -3,8 +3,8 @@ import { ManageScore } from "@/components/SetupGame/ManageScore";
 import { useGameStore } from "@/store/GameStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const CasualGames = () => {
   const {
@@ -14,6 +14,7 @@ const CasualGames = () => {
     addPlayer,
     deletePlayer,
     lastDartMultiplier,
+    setLastDartMultiplier,
     quitGame,
   } = useGameStore();
 
@@ -28,6 +29,7 @@ const CasualGames = () => {
       <Text style={commonStyles.title}>Game Setup</Text>
       <ManageScore
         lastDartMultiplier={lastDartMultiplier}
+        setLastDartMultiplier={setLastDartMultiplier}
         target={target}
         setTarget={setTarget}
       />

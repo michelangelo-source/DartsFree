@@ -32,6 +32,7 @@ type TournamentActions = {
   deleteTournamentParticipants: (playerName: string) => void;
   randomizeTournament: () => void;
   startMatch: (match?: TournamentMatch) => void;
+  setLastDartMultiplier: (multiplier: 1 | 2 | 3) => void;
   resetTournament: () => void;
 };
 
@@ -99,7 +100,11 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
       tournamentParticipants: [...state.tournamentParticipants, player],
     }));
   },
-
+  setLastDartMultiplier: (multiplier) => {
+    set({
+      lastDartMultiplier: multiplier,
+    });
+  },
   randomizeTournament: () => {
     const players = get().tournamentParticipants;
     const shuffledPlayers = shufflePlayers(players);
@@ -122,6 +127,7 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
       const gameStore = useGameStore.getState();
 
       gameStore.quitGame();
+      gameStore.setLastDartMultiplier(state.lastDartMultiplier);
       gameStore.setTarget(state.target);
 
       if (matchToStart.player1) gameStore.addPlayer(matchToStart.player1);

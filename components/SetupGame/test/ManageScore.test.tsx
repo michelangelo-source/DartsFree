@@ -26,6 +26,8 @@ jest.mock("@/components/CasualGame/SetScoreButton", () => ({
 describe("ManageScore Component", () => {
   const mockSetTarget = jest.fn();
 
+  const mockSetLastDartMultiplier = jest.fn();
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -36,6 +38,7 @@ describe("ManageScore Component", () => {
         target={501}
         setTarget={mockSetTarget}
         lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
       />,
     );
 
@@ -51,6 +54,7 @@ describe("ManageScore Component", () => {
         target={501}
         setTarget={mockSetTarget}
         lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
       />,
     );
 
@@ -69,6 +73,7 @@ describe("ManageScore Component", () => {
         target={101}
         setTarget={mockSetTarget}
         lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
       />,
     );
 
@@ -88,6 +93,7 @@ describe("ManageScore Component", () => {
         target={1}
         setTarget={mockSetTarget}
         lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
       />,
     );
 
@@ -112,6 +118,7 @@ describe("ManageScore Component", () => {
         target={501}
         setTarget={mockSetTarget}
         lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
       />,
     );
 

@@ -50,6 +50,8 @@ describe("TournamentStore", () => {
   const mockSetTarget = jest.fn();
   const mockAddPlayer = jest.fn();
 
+  const mockSetLastDartMultiplier = jest.fn();
+
   beforeEach(() => {
     useTournamentStore.setState(initialTournamentState, true);
     jest.clearAllMocks();
@@ -58,6 +60,7 @@ describe("TournamentStore", () => {
       quitGame: mockQuitGame,
       setTarget: mockSetTarget,
       addPlayer: mockAddPlayer,
+      setLastDartMultiplier: mockSetLastDartMultiplier,
     });
   });
 
@@ -78,6 +81,14 @@ describe("TournamentStore", () => {
     });
 
     expect(useTournamentStore.getState().target).toBe(301);
+  });
+
+  it("setLastDartMultiplier should update the lastDartMultiplier", () => {
+    act(() => {
+      useTournamentStore.getState().setLastDartMultiplier(1);
+    });
+
+    expect(useTournamentStore.getState().lastDartMultiplier).toBe(1);
   });
 
   it("resetTournament should reset state to initial state", () => {
@@ -185,6 +196,7 @@ describe("TournamentStore", () => {
 
     expect(mockQuitGame).toHaveBeenCalled();
     expect(mockSetTarget).toHaveBeenCalledWith(701);
+    expect(mockSetLastDartMultiplier).toHaveBeenCalledWith(state.lastDartMultiplier);
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer1);
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer2);
   });

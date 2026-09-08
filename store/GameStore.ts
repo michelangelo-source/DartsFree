@@ -30,6 +30,7 @@ type GameActions = {
   updatePlayer: (player: Player) => void;
   nextLeg: (winnerName: string) => void;
   quitGame: () => void;
+  setLastDartMultiplier: (multiplier: 1 | 2 | 3) => void;
 };
 
 type Game = GameState & GameActions;
@@ -63,6 +64,11 @@ export const useGameStore = create<Game>()((set, get, store) => ({
     resetPlayers.push(firstPlayer);
     set({
       players: resetPlayers,
+    });
+  },
+  setLastDartMultiplier: (multiplier) => {
+    set({
+      lastDartMultiplier: multiplier,
     });
   },
   quitGame: () => {

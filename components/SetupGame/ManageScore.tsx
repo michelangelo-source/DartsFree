@@ -1,9 +1,18 @@
 import { commonStyles } from "@/styles/commonStyle";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import Toast from "react-native-toast-message";
 import SetScoreButton from "../CasualGame/SetScoreButton";
+import { RadioGroup } from "../RadioGroup/RadioGroup";
+
+const MultiplayerOptions = [
+  { value: 1, label: "Single" },
+  { value: 2, label: "Double" },
+  { value: 3, label: "Master" },
+];
+
 type ManageScoreProps = {
   lastDartMultiplier: 1 | 2 | 3;
+  setLastDartMultiplier: (multiplier: 1 | 2 | 3) => void;
   target: number;
   setTarget: (target: number) => void;
 };
@@ -12,6 +21,7 @@ export const ManageScore = ({
   lastDartMultiplier,
   target,
   setTarget,
+  setLastDartMultiplier,
 }: ManageScoreProps) => {
   return (
     <>
@@ -40,6 +50,17 @@ export const ManageScore = ({
         style={[styles.input, commonStyles.glassPanel, commonStyles.text]}
         keyboardType="number-pad"
       />
+
+      <View style={[commonStyles.glassPanel, styles.radioSection]}>
+        <Text style={[styles.radioLabel, commonStyles.text]}>
+          Checkout Mode:
+        </Text>
+        <RadioGroup
+          options={MultiplayerOptions}
+          selectedValue={lastDartMultiplier}
+          onSelect={setLastDartMultiplier}
+        />
+      </View>
     </>
   );
 };
@@ -49,5 +70,13 @@ const styles = StyleSheet.create({
     margin: 10,
     alignSelf: "stretch",
     color: "black",
+  },
+  radioSection: {
+    padding: 10,
+    marginHorizontal: 10,
+    alignSelf: "stretch",
+  },
+  radioLabel: {
+    textAlign: "center",
   },
 });
