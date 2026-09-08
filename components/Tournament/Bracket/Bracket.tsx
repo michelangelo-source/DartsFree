@@ -43,13 +43,8 @@ export const Bracket = ({
   scrollY,
   handleStart,
 }: BracketProps) => {
-  const {
-    readyToStart,
-    isStarted,
-    tournamentMatches,
-    legsPerRound,
-    setLegPerRound,
-  } = useTournamentStore();
+  const { readyToStart, isStarted, tournamentMatches, legsToWin, setLegToWin } =
+    useTournamentStore();
   const { height, width } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -130,39 +125,40 @@ export const Bracket = ({
               animatedContentStyle,
             ]}
           >
-            {legsPerRound.map((count, index) => {
+            {legsToWin.map((count, index) => {
               return (
                 <View
                   key={index}
                   style={[
-                    styles.legsPerRoundContainer,
+                    styles.legsToWinContainer,
                     {
-                      left: index * (MATCH_WIDTH + MATCH_WIDTH_MARGIN) + MAP_PADDING,
-                      top: MAP_PADDING + calculateTopStartingPosition(index + 1),
-                    }
+                      left:
+                        index * (MATCH_WIDTH + MATCH_WIDTH_MARGIN) +
+                        MAP_PADDING,
+                      top:
+                        MAP_PADDING + calculateTopStartingPosition(index + 1),
+                    },
                   ]}
                 >
-                  <Text
-                    style={[commonStyles.text, styles.legsPerRoundLabel]}
-                  >
-                    Legs per round
+                  <Text style={[commonStyles.text, styles.legsToWinLabel]}>
+                    Legs to win
                   </Text>
 
-                  <View style={styles.legsPerRoundControls}>
+                  <View style={styles.legsToWinControls}>
                     <Text style={commonStyles.text}>{count}</Text>
                     {!isStarted && (
-                      <View style={styles.legsPerRoundButtonsContainer}>
+                      <View style={styles.legsToWinButtonsContainer}>
                         <Pressable
                           onPress={() => {
-                            if (count > 1) setLegPerRound(index, count - 1);
+                            if (count > 1) setLegToWin(index, count - 1);
                           }}
-                          style={styles.legsPerRoundButton}
+                          style={styles.legsToWinButton}
                         >
                           <Minus color={"white"} />
                         </Pressable>
                         <Pressable
-                          onPress={() => setLegPerRound(index, count + 1)}
-                          style={styles.legsPerRoundButton}
+                          onPress={() => setLegToWin(index, count + 1)}
+                          style={styles.legsToWinButton}
                         >
                           <Plus color={"white"} />
                         </Pressable>
@@ -264,28 +260,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  legsPerRoundContainer: {
+  legsToWinContainer: {
     position: "absolute",
     alignItems: "center",
     justifyContent: "flex-end",
     height: LEG_COUNT_SPACE,
     width: MATCH_WIDTH,
   },
-  legsPerRoundLabel: {
+  legsToWinLabel: {
     fontSize: 10,
     opacity: 0.7,
   },
-  legsPerRoundControls: {
+  legsToWinControls: {
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  legsPerRoundButtonsContainer: {
+  legsToWinButtonsContainer: {
     flexDirection: "row",
     gap: 5,
   },
-  legsPerRoundButton: {
+  legsToWinButton: {
     backgroundColor: "green",
     borderRadius: 5,
   },

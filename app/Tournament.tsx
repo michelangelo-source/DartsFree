@@ -1,4 +1,5 @@
 import { ExitGameModal } from "@/components/Modals/ExitGameModal";
+import { useGameStore } from "@/store/GameStore";
 import { ManagePlayers } from "@/components/SetupGame/ManagePlayers";
 import { ManageScore } from "@/components/SetupGame/ManageScore";
 import { Bracket } from "@/components/Tournament/Bracket/Bracket";
@@ -38,6 +39,7 @@ const Tournament = () => {
   useEffect(() => {
     return () => {
       resetTournament();
+      useGameStore.getState().quitGame();
     };
   }, [resetTournament]);
 
