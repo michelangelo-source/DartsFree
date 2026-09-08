@@ -14,6 +14,7 @@ export type TournamentMatch = {
 };
 
 type TournamentState = {
+  legsPerRound: number[];
   readyToStart: boolean;
   target: number;
   lastDartMultiplier: 1 | 2 | 3;
@@ -32,6 +33,7 @@ type TournamentActions = {
   deleteTournamentParticipants: (playerName: string) => void;
   randomizeTournament: () => void;
   startMatch: (match?: TournamentMatch) => void;
+  setLegPerRound: (round: number, value: number) => void;
   setLastDartMultiplier: (multiplier: 1 | 2 | 3) => void;
   resetTournament: () => void;
 };
@@ -42,6 +44,7 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
   readyToStart: false,
   target: 501,
   lastDartMultiplier: 2,
+  legsPerRound: [],
   isStarted: false,
   tournamentParticipants: [],
   tournamentMatches: [],
@@ -109,11 +112,22 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
     const players = get().tournamentParticipants;
     const shuffledPlayers = shufflePlayers(players);
     const tournamentMatches = generateBracket(shuffledPlayers);
-
+    const legsPerRound = Array.from<number>({
+      length: tournamentMatches.at(-1)?.round ?? 0,
+    }).fill(1);
     set(() => ({
       readyToStart: true,
       tournamentMatches,
+      legsPerRound,
     }));
+  },
+  setLegPerRound: (round: number, value: number) => {
+    const currentValues = get().legsPerRound;
+    const newValues = [...currentValues];
+    newValues[round] = value;
+    set({
+      legsPerRound: newValues,
+    });
   },
 
   startMatch: (match?: TournamentMatch) => {

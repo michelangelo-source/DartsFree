@@ -3,7 +3,7 @@ import {
   useTournamentStore,
 } from "@/store/Tournament/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
-import { Play } from "lucide-react-native";
+import { Minus, Play, Plus } from "lucide-react-native";
 import {
   Pressable,
   StyleSheet,
@@ -25,6 +25,7 @@ import {
   calculateMatchSpacing,
   calculateTopStartingPosition,
   EXTRA_SCROLL_SPACE,
+  LEG_COUNT_SPACE,
   MAP_PADDING,
   MATCH_HEIGHT,
   MATCH_HEIGHT_MARGIN,
@@ -42,7 +43,13 @@ export const Bracket = ({
   scrollY,
   handleStart,
 }: BracketProps) => {
-  const { readyToStart, tournamentMatches } = useTournamentStore();
+  const {
+    readyToStart,
+    isStarted,
+    tournamentMatches,
+    legsPerRound,
+    setLegPerRound,
+  } = useTournamentStore();
   const { height, width } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -61,7 +68,8 @@ export const Bracket = ({
   const MAP_HEIGHT =
     Math.ceil(totalMatchesLength / 2) * MATCH_HEIGHT +
     (Math.ceil(totalMatchesLength / 2) - 1) * MATCH_HEIGHT_MARGIN +
-    2 * MAP_PADDING;
+    2 * MAP_PADDING +
+    LEG_COUNT_SPACE;
 
   const MIN_X = Math.min(0, width - MAP_WIDTH - EXTRA_SCROLL_SPACE);
   const MAX_X = 0;
@@ -122,12 +130,55 @@ export const Bracket = ({
               animatedContentStyle,
             ]}
           >
+            {legsPerRound.map((count, index) => {
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.legsPerRoundContainer,
+                    {
+                      left: index * (MATCH_WIDTH + MATCH_WIDTH_MARGIN) + MAP_PADDING,
+                      top: MAP_PADDING + calculateTopStartingPosition(index + 1),
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[commonStyles.text, styles.legsPerRoundLabel]}
+                  >
+                    Legs per round
+                  </Text>
+
+                  <View style={styles.legsPerRoundControls}>
+                    <Text style={commonStyles.text}>{count}</Text>
+                    {!isStarted && (
+                      <View style={styles.legsPerRoundButtonsContainer}>
+                        <Pressable
+                          onPress={() => {
+                            if (count > 1) setLegPerRound(index, count - 1);
+                          }}
+                          style={styles.legsPerRoundButton}
+                        >
+                          <Minus color={"white"} />
+                        </Pressable>
+                        <Pressable
+                          onPress={() => setLegPerRound(index, count + 1)}
+                          style={styles.legsPerRoundButton}
+                        >
+                          <Plus color={"white"} />
+                        </Pressable>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              );
+            })}
             {tournamentMatches.map((match, index) => {
               const leftPosition =
                 (match.round - 1) * (MATCH_WIDTH + MATCH_WIDTH_MARGIN) +
                 MAP_PADDING;
               const topPosition =
                 MAP_PADDING +
+                LEG_COUNT_SPACE +
                 calculateTopStartingPosition(match.round) +
                 calculateMatchSpacing(match.round, index, totalMatchesLength);
 
@@ -212,5 +263,30 @@ const styles = StyleSheet.create({
   playButton: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  legsPerRoundContainer: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    height: LEG_COUNT_SPACE,
+    width: MATCH_WIDTH,
+  },
+  legsPerRoundLabel: {
+    fontSize: 10,
+    opacity: 0.7,
+  },
+  legsPerRoundControls: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  legsPerRoundButtonsContainer: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  legsPerRoundButton: {
+    backgroundColor: "green",
+    borderRadius: 5,
   },
 });
