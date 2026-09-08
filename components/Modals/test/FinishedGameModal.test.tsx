@@ -44,6 +44,7 @@ describe("FinishedGameModal Component", () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       quitGame: mockQuitGame,
       nextLeg: mockNextLeg,
+      legsToWin: 1,
     });
 
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
@@ -152,6 +153,47 @@ describe("FinishedGameModal Component", () => {
       expect(mockSetOpen).toHaveBeenCalledWith(false);
       expect(mockStartMatch).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith("/Game");
+    });
+  });
+
+  describe("Tournament Mode (Tournament isStarted: true, Match Not Over)", () => {
+    beforeEach(() => {
+      (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+        isStarted: true,
+        startMatch: mockStartMatch,
+        tournamentMatches: [],
+      });
+      (useGameStore as unknown as jest.Mock).mockReturnValue({
+        quitGame: mockQuitGame,
+        nextLeg: mockNextLeg,
+        legsToWin: 5,
+      });
+    });
+
+    it("renders tournament 'See Bracket' and 'Next Leg' buttons", async () => {
+      const { getByText, queryByText } = await render(
+        <FinishedGameModal {...defaultProps} />,
+      );
+
+      expect(getByText("See Bracket")).toBeTruthy();
+      expect(getByText("Next Leg")).toBeTruthy();
+      expect(queryByText("Next Match")).toBeNull();
+      expect(queryByText("Quit Game")).toBeNull();
+    });
+
+    it("handles 'See Bracket' button press correctly (does not quit game)", async () => {
+      const { getByText } = await render(
+        <FinishedGameModal {...defaultProps} />,
+      );
+
+      const bracketButton = getByText("See Bracket");
+      fireEvent.press(bracketButton);
+
+      expect(mockSetOpen).toHaveBeenCalledWith(false);
+      expect(router.navigate).toHaveBeenCalledWith("/Tournament");
+      expect(mockNextLeg).toHaveBeenCalledWith("Alice");
+      expect(mockResetOrder).toHaveBeenCalled();
+      expect(mockQuitGame).not.toHaveBeenCalled();
     });
   });
 });

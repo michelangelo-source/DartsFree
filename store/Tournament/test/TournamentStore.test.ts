@@ -48,6 +48,7 @@ describe("TournamentStore", () => {
 
   const mockQuitGame = jest.fn();
   const mockSetTarget = jest.fn();
+  const mockSetLegsToWin = jest.fn();
   const mockAddPlayer = jest.fn();
 
   const mockSetLastDartMultiplier = jest.fn();
@@ -59,6 +60,7 @@ describe("TournamentStore", () => {
     (useGameStore.getState as jest.Mock).mockReturnValue({
       quitGame: mockQuitGame,
       setTarget: mockSetTarget,
+      setLegsToWin: mockSetLegsToWin,
       addPlayer: mockAddPlayer,
       setLastDartMultiplier: mockSetLastDartMultiplier,
     });
@@ -196,9 +198,34 @@ describe("TournamentStore", () => {
 
     expect(mockQuitGame).toHaveBeenCalled();
     expect(mockSetTarget).toHaveBeenCalledWith(701);
+    expect(mockSetLegsToWin).toHaveBeenCalledWith(1);
     expect(mockSetLastDartMultiplier).toHaveBeenCalledWith(state.lastDartMultiplier);
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer1);
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer2);
+  });
+
+  it("startMatch should not reset game if resuming the same match", () => {
+    const mockMatch: TournamentMatch = {
+      id: 1,
+      round: 1,
+      player1: mockPlayer1,
+      player2: mockPlayer2,
+      winner: null,
+      source_match_p1: null,
+      source_match_p2: null,
+      next_match_id: null,
+    };
+
+    useTournamentStore.setState({ currentMatch: mockMatch });
+
+    act(() => {
+      useTournamentStore.getState().startMatch(mockMatch);
+    });
+
+    expect(mockQuitGame).not.toHaveBeenCalled();
+    expect(mockSetTarget).not.toHaveBeenCalled();
+    expect(mockSetLegsToWin).not.toHaveBeenCalled();
+    expect(mockAddPlayer).not.toHaveBeenCalled();
   });
 
   it("startMatch should auto-find the next available match if no match is provided", () => {
