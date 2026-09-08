@@ -67,6 +67,8 @@ describe("Bracket Component", () => {
   beforeEach(() => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       readyToStart: false,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
       tournamentMatches: [],
     });
   });
@@ -83,6 +85,8 @@ describe("Bracket Component", () => {
   it("renders match players correctly", async () => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       readyToStart: false,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
       tournamentMatches: [
         {
           id: "match-1",
@@ -110,6 +114,8 @@ describe("Bracket Component", () => {
 
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       readyToStart: true,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
       tournamentMatches: [mockMatch],
     });
 
@@ -126,6 +132,8 @@ describe("Bracket Component", () => {
   it("does not show the Play button if the match already has a winner", async () => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       readyToStart: true,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
       tournamentMatches: [
         {
           id: "match-1",
@@ -145,6 +153,8 @@ describe("Bracket Component", () => {
   it("does not show the Play button if readyToStart is false", async () => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       readyToStart: false,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
       tournamentMatches: [
         {
           id: "match-1",

@@ -23,10 +23,11 @@ export const FinishedGameModal = ({
   resetOrder,
   setOpen,
 }: FinishedGameModalProps) => {
-  const { nextLeg, quitGame } = useGameStore();
+  const { nextLeg, quitGame, legsToWin } = useGameStore();
   const { isStarted, startMatch, tournamentMatches } = useTournamentStore();
   
   const hasNextMatch = isStarted && tournamentMatches.some((m) => m.player1 && m.player2 && !m.winner);
+  const isMatchOver = winner.wins + 1 >= legsToWin;
 
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
@@ -41,7 +42,7 @@ export const FinishedGameModal = ({
             Darts Thrown: {winner.dartsThrown}
           </Text>
           <View style={styles.btnContainer}>
-            {isStarted ? (
+            {isStarted && isMatchOver ? (
               <>
                 <Pressable
                   onPress={() => {
@@ -71,13 +72,22 @@ export const FinishedGameModal = ({
               <>
                 <Pressable
                   onPress={() => {
-                    setOpen(!open);
-                    router.navigate("/MainMenu");
-                    quitGame();
+                    if (isStarted) {
+                      nextLeg(winner.name);
+                      resetOrder();
+                      setOpen(!open);
+                      router.navigate("/Tournament");
+                    } else {
+                      setOpen(!open);
+                      router.navigate("/MainMenu");
+                      quitGame();
+                    }
                   }}
-                  style={styles.quitBtn}
+                  style={isStarted ? styles.bracketBtn : styles.quitBtn}
                 >
-                  <Text style={commonStyles.text}>Quit Game</Text>
+                  <Text style={commonStyles.text}>
+                    {isStarted ? "See Bracket" : "Quit Game"}
+                  </Text>
                 </Pressable>
 
                 <Pressable

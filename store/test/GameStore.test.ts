@@ -28,6 +28,7 @@ describe("GameStore", () => {
   it("correct initial state", () => {
     const state = useGameStore.getState();
     expect(state.target).toBe(501);
+    expect(state.legsToWin).toBe(1);
     expect(state.lastDartMultiplier).toBe(2);
     expect(state.players).toEqual([]);
   });
@@ -35,6 +36,11 @@ describe("GameStore", () => {
   it("setTarget", () => {
     useGameStore.getState().setTarget(301);
     expect(useGameStore.getState().target).toBe(301);
+  });
+
+  it("setLegsToWin", () => {
+    useGameStore.getState().setLegsToWin(3);
+    expect(useGameStore.getState().legsToWin).toBe(3);
   });
 
   it("setLastDartMultiplier", () => {
@@ -116,14 +122,17 @@ describe("GameStore", () => {
     const store = useGameStore.getState();
     store.addPlayer(player1);
     store.setTarget(701);
+    store.setLegsToWin(5);
 
     expect(useGameStore.getState().players).toHaveLength(1);
     expect(useGameStore.getState().target).toBe(701);
+    expect(useGameStore.getState().legsToWin).toBe(5);
 
     useGameStore.getState().quitGame();
 
     const stateAfterQuit = useGameStore.getState();
     expect(stateAfterQuit.players).toEqual([]);
     expect(stateAfterQuit.target).toBe(501);
+    expect(stateAfterQuit.legsToWin).toBe(1);
   });
 });

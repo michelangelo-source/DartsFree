@@ -26,7 +26,7 @@ const getNumericScore = (score: SingleScore | null): number => {
 };
 
 export const useGame = () => {
-  const { target, lastDartMultiplier, players, updatePlayer } = useGameStore();
+  const { target, legsToWin, lastDartMultiplier, players, updatePlayer } = useGameStore();
   const { isStarted, setWinner } = useTournamentStore();
   const playersListRef = useRef<FlatList>(null);
 
@@ -110,7 +110,9 @@ export const useGame = () => {
           thirdThrow: null,
         });
         if (isStarted) {
-          setWinner((currentPlayerIndex + 1) as 1 | 2);
+          if (updatedPlayer.wins + 1 >= legsToWin) {
+            setWinner((currentPlayerIndex + 1) as 1 | 2);
+          }
         }
         setFinished(true);
         return;

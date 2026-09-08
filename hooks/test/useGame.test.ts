@@ -27,6 +27,7 @@ describe("useGame Hook", () => {
 
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: mockPlayers,
       updatePlayer: mockUpdatePlayer,
@@ -72,6 +73,7 @@ describe("useGame Hook", () => {
   it("addScore should set bust = true if the player exceeds the target", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 490, dartsThrown: 3, history: [] },
@@ -91,6 +93,7 @@ describe("useGame Hook", () => {
   it("addScore should set finished = true if the player perfectly hits the target in Casual Mode", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 50,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 10, dartsThrown: 3, history: [] },
@@ -116,9 +119,10 @@ describe("useGame Hook", () => {
   it("addScore should set finished = true and call setWinner if the player perfectly hits the target in Tournament Mode", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 50,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
-        { id: "1", name: "Player 1", score: 10, dartsThrown: 3, history: [] },
+        { id: "1", name: "Player 1", score: 10, wins: 0, dartsThrown: 3, history: [] },
       ],
       updatePlayer: mockUpdatePlayer,
     });
@@ -141,6 +145,32 @@ describe("useGame Hook", () => {
       }),
     );
     expect(mockSetWinner).toHaveBeenCalledWith(1);
+  });
+
+  it("addScore should set finished = true but NOT call setWinner if the player has not reached legsToWin in Tournament Mode", async () => {
+    (useGameStore as unknown as jest.Mock).mockReturnValue({
+      target: 50,
+      legsToWin: 2,
+      lastDartMultiplier: 2,
+      players: [
+        { id: "1", name: "Player 1", score: 10, wins: 0, dartsThrown: 3, history: [] },
+      ],
+      updatePlayer: mockUpdatePlayer,
+    });
+
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      isStarted: true,
+      setWinner: mockSetWinner,
+    });
+
+    const { result } = await renderHook(() => useGame());
+
+    await act(() => {
+      result.current.addScore(20, 2);
+    });
+
+    expect(result.current.finished).toBe(true);
+    expect(mockSetWinner).not.toHaveBeenCalled();
   });
 
   it("classicScore should set 26 points (1, 5, 20) and 3 throws", async () => {
@@ -166,6 +196,7 @@ describe("useGame Hook", () => {
   it("classicScore should not add score if remaining score is 26 or less", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 480, dartsThrown: 0, history: [] },
@@ -205,6 +236,7 @@ describe("useGame Hook", () => {
   it("undoLastThrow should undo the last throw", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 20, dartsThrown: 1, history: [] },
@@ -269,6 +301,7 @@ describe("useGame Hook", () => {
   it("nextPlayer should save bust state in player history", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 490, dartsThrown: 0, history: [] },
@@ -305,6 +338,7 @@ describe("useGame Hook", () => {
 
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { name: "Player 1", score: 20, dartsThrown: 1, history: [] },
@@ -336,6 +370,7 @@ describe("useGame Hook", () => {
 
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         {
@@ -366,6 +401,7 @@ describe("useGame Hook", () => {
   it("undoLastThrow should correctly revert bust state", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
+      legsToWin: 1,
       lastDartMultiplier: 2,
       players: [
         { id: "1", name: "Player 1", score: 490, dartsThrown: 0, history: [] },

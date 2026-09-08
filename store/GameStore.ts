@@ -19,12 +19,14 @@ export type Player = {
 
 type GameState = {
   target: number;
+  legsToWin: number;
   lastDartMultiplier: 1 | 2 | 3;
   players: Player[];
 };
 
 type GameActions = {
   setTarget: (target: number) => void;
+  setLegsToWin: (legsToWin: number) => void;
   addPlayer: (player: Player) => void;
   deletePlayer: (playerName: string) => void;
   updatePlayer: (player: Player) => void;
@@ -37,9 +39,11 @@ type Game = GameState & GameActions;
 
 export const useGameStore = create<Game>()((set, get, store) => ({
   target: 501,
+  legsToWin: 1,
   players: [],
   lastDartMultiplier: 2,
   setTarget: (target: number) => set({ target }),
+  setLegsToWin: (legsToWin: number) => set({ legsToWin }),
   addPlayer: (player: Player) =>
     set((state) => ({ players: [...state.players, player] })),
   deletePlayer: (playerName: string) =>

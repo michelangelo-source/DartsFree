@@ -1,8 +1,15 @@
 import { useTournamentStore } from "@/store/Tournament/TournamentStore";
+import { useGameStore } from "@/store/GameStore";
 import { act, fireEvent, render } from "@testing-library/react-native";
 import React from "react";
 import { Text, View } from "react-native";
 import Tournament from "../Tournament";
+
+jest.mock("@/store/GameStore", () => ({
+  useGameStore: {
+    getState: jest.fn(),
+  },
+}));
 
 const MockAnimatedScrollView: React.FC<any> = ({
   children,
@@ -89,6 +96,9 @@ describe("Tournament Screen", () => {
     (useTournamentStore as unknown as jest.Mock).mockReturnValue(
       defaultTournamentState,
     );
+    (useGameStore.getState as jest.Mock).mockReturnValue({
+      quitGame: jest.fn(),
+    });
   });
 
   afterEach(() => {
@@ -169,11 +179,16 @@ describe("Tournament Screen", () => {
     expect(queryByTestId("exit-game-modal")).toBeNull();
   });
 
-  it("calls resetTournament on unmount", async () => {
+  it("calls resetTournament and GameStore.quitGame on unmount", async () => {
     const mockResetTournament = jest.fn();
     (useTournamentStore as unknown as jest.Mock).mockReturnValue({
       ...defaultTournamentState,
       resetTournament: mockResetTournament,
+    });
+
+    const mockQuitGame = jest.fn();
+    (useGameStore.getState as jest.Mock).mockReturnValue({
+      quitGame: mockQuitGame,
     });
 
     const { unmount } = await render(<Tournament />);
@@ -182,5 +197,6 @@ describe("Tournament Screen", () => {
     });
 
     expect(mockResetTournament).toHaveBeenCalled();
+    expect(mockQuitGame).toHaveBeenCalled();
   });
 });

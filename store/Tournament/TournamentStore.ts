@@ -14,6 +14,7 @@ export type TournamentMatch = {
 };
 
 type TournamentState = {
+  legsToWin: number[];
   readyToStart: boolean;
   target: number;
   lastDartMultiplier: 1 | 2 | 3;
@@ -32,6 +33,7 @@ type TournamentActions = {
   deleteTournamentParticipants: (playerName: string) => void;
   randomizeTournament: () => void;
   startMatch: (match?: TournamentMatch) => void;
+  setLegToWin: (round: number, value: number) => void;
   setLastDartMultiplier: (multiplier: 1 | 2 | 3) => void;
   resetTournament: () => void;
 };
@@ -42,6 +44,7 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
   readyToStart: false,
   target: 501,
   lastDartMultiplier: 2,
+  legsToWin: [],
   isStarted: false,
   tournamentParticipants: [],
   tournamentMatches: [],
@@ -109,11 +112,22 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
     const players = get().tournamentParticipants;
     const shuffledPlayers = shufflePlayers(players);
     const tournamentMatches = generateBracket(shuffledPlayers);
-
+    const legsToWin = Array.from<number>({
+      length: tournamentMatches.at(-1)?.round ?? 0,
+    }).fill(1);
     set(() => ({
       readyToStart: true,
       tournamentMatches,
+      legsToWin,
     }));
+  },
+  setLegToWin: (round: number, value: number) => {
+    const currentValues = get().legsToWin;
+    const newValues = [...currentValues];
+    newValues[round] = value;
+    set({
+      legsToWin: newValues,
+    });
   },
 
   startMatch: (match?: TournamentMatch) => {
@@ -126,12 +140,16 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
     if (matchToStart) {
       const gameStore = useGameStore.getState();
 
-      gameStore.quitGame();
-      gameStore.setLastDartMultiplier(state.lastDartMultiplier);
-      gameStore.setTarget(state.target);
+      if (state.currentMatch?.id !== matchToStart.id) {
+        gameStore.quitGame();
+        gameStore.setLastDartMultiplier(state.lastDartMultiplier);
+        gameStore.setTarget(state.target);
+        const targetLegs = state.legsToWin[matchToStart.round - 1] || 1;
+        gameStore.setLegsToWin(targetLegs);
 
-      if (matchToStart.player1) gameStore.addPlayer(matchToStart.player1);
-      if (matchToStart.player2) gameStore.addPlayer(matchToStart.player2);
+        if (matchToStart.player1) gameStore.addPlayer(matchToStart.player1);
+        if (matchToStart.player2) gameStore.addPlayer(matchToStart.player2);
+      }
 
       set({
         currentMatch: matchToStart,
