@@ -1,5 +1,6 @@
 import { SingleScore, useGameStore, VisitScore } from "@/store/GameStore";
 import { useTournamentStore } from "@/store/Tournament/TournamentStore";
+import { useAudioPlayer } from "expo-audio";
 import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 
@@ -26,8 +27,17 @@ const getNumericScore = (score: SingleScore | null): number => {
 };
 
 export const useGame = () => {
-  const { target, legsToWin, lastDartMultiplier, players, updatePlayer } = useGameStore();
+  const { target, legsToWin, lastDartMultiplier, players, updatePlayer } =
+    useGameStore();
   const { isStarted, setWinner } = useTournamentStore();
+
+  const scorePlayer = useAudioPlayer(require("@/assets/sounds/ScoreSound.mp3"));
+  const score3xPlayer = useAudioPlayer(
+    require("@/assets/sounds/ScoreSound3x.mp3"),
+  );
+  const missPlayer = useAudioPlayer(require("@/assets/sounds/MissSound.mp3"));
+  const bustPlayer = useAudioPlayer(require("@/assets/sounds/BustSound.mp3"));
+
   const playersListRef = useRef<FlatList>(null);
 
   const [finished, setFinished] = useState(false);
@@ -61,6 +71,9 @@ export const useGame = () => {
       secondThrow: 5,
       thirdThrow: 20,
     });
+
+    score3xPlayer.seekTo(0);
+    score3xPlayer.play();
 
     updatePlayer({
       ...currentPlayer,
@@ -119,6 +132,8 @@ export const useGame = () => {
       }
 
       if (checkIsBust(target, potentialScore, lastDartMultiplier)) {
+        bustPlayer.seekTo(0);
+        bustPlayer.play();
         setBust(true);
         const pointsToRevert =
           getNumericScore(currentThrows.firstThrow) +
@@ -131,8 +146,12 @@ export const useGame = () => {
       }
 
       updatedPlayer.score = potentialScore;
+    } else {
+      missPlayer.seekTo(0);
+      missPlayer.play();
     }
-
+    scorePlayer.seekTo(0);
+    scorePlayer.play();
     updatePlayer(updatedPlayer);
     updateCurrentThrows(scored);
   };
