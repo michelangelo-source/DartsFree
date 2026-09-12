@@ -11,6 +11,16 @@ jest.mock("@/store/Tournament/TournamentStore", () => ({
   useTournamentStore: jest.fn(),
 }));
 
+const mockPlay = jest.fn();
+const mockSeekTo = jest.fn();
+
+jest.mock("expo-audio", () => ({
+  useAudioPlayer: jest.fn(() => ({
+    play: mockPlay,
+    seekTo: mockSeekTo,
+  })),
+}));
+
 describe("useGame Hook", () => {
   let mockUpdatePlayer: jest.Mock;
   let mockSetWinner: jest.Mock;
@@ -24,6 +34,8 @@ describe("useGame Hook", () => {
     jest.clearAllMocks();
     mockUpdatePlayer = jest.fn();
     mockSetWinner = jest.fn();
+    mockPlay.mockClear();
+    mockSeekTo.mockClear();
 
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
@@ -68,6 +80,8 @@ describe("useGame Hook", () => {
       }),
     );
     expect(result.current.currentThrows.firstThrow).toBe(60);
+    expect(mockPlay).toHaveBeenCalled();
+    expect(mockSeekTo).toHaveBeenCalledWith(0);
   });
 
   it("addScore should set bust = true if the player exceeds the target", async () => {
@@ -191,6 +205,8 @@ describe("useGame Hook", () => {
       secondThrow: 5,
       thirdThrow: 20,
     });
+    expect(mockPlay).toHaveBeenCalled();
+    expect(mockSeekTo).toHaveBeenCalledWith(0);
   });
 
   it("classicScore should not add score if remaining score is 26 or less", async () => {
@@ -216,6 +232,7 @@ describe("useGame Hook", () => {
       secondThrow: null,
       thirdThrow: null,
     });
+    expect(mockPlay).not.toHaveBeenCalled();
   });
 
   it("nextPlayer should change currentPlayerIndex to the next player", async () => {
