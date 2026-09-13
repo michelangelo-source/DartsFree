@@ -1,10 +1,9 @@
 import { Text, View } from "react-native";
 
-const Training = () => {
+export default function Random() {
   return (
     <View>
-      <Text>Training</Text>
+      <Text>Random</Text>
     </View>
   );
-};
-export default Training;
+}
