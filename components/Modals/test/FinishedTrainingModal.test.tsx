@@ -47,13 +47,15 @@ describe("FinishedTrainingModal Component", () => {
     expect(queryByText("Result:")).toBeNull();
   });
 
-  it("navigates to MainMenu on Exit press", async () => {
+  it("navigates to MainMenu on Exit press and calls onExit", async () => {
+    const mockOnExit = jest.fn();
     const { getByText } = await render(
-      <FinishedTrainingModal {...defaultProps} />,
+      <FinishedTrainingModal {...defaultProps} onExit={mockOnExit} />,
     );
 
     fireEvent.press(getByText("Exit"));
 
+    expect(mockOnExit).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith("/MainMenu");
   });
 

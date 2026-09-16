@@ -11,8 +11,8 @@ const TrainingMenu = () => {
         icon={<Clock width={40} height={40} strokeWidth={1.2} />}
       />
       <MenuButton
-        href={"/Training/Random"}
-        label={"Random"}
+        href={"/Training/RandomThrows"}
+        label={"Random Throws"}
         icon={<Dices width={40} height={40} strokeWidth={1.2} />}
       />
     </View>

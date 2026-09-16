@@ -26,7 +26,7 @@ describe("TrainingMenu Screen", () => {
   it("renders Random button", async () => {
     const { getByText, getByTestId } = await render(<TrainingMenu />);
 
-    expect(getByText("Random")).toBeTruthy();
+    expect(getByText("Random Throws")).toBeTruthy();
     expect(getByTestId("dices-icon")).toBeTruthy();
   });
 });
