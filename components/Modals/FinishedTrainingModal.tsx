@@ -5,12 +5,14 @@ type FinishedTrainingModalProps = {
   open: boolean;
   result: string;
   resetTraining: () => void;
+  onExit?: () => void;
 };
 
 export const FinishedTrainingModal = ({
   open,
   result,
   resetTraining,
+  onExit,
 }: FinishedTrainingModalProps) => {
   return (
     <Modal animationType="fade" transparent={true} visible={open}>
@@ -21,6 +23,7 @@ export const FinishedTrainingModal = ({
           <View style={styles.btnContainer}>
             <Pressable
               onPress={() => {
+                if (onExit) onExit();
                 router.navigate("/MainMenu");
               }}
               style={styles.quitBtn}
