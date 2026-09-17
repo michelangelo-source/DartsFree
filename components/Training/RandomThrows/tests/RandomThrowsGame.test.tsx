@@ -1,6 +1,13 @@
 import { act, fireEvent, render } from "@testing-library/react-native";
 import { RandomThrowsGame } from "../RandomThrowsGame";
 
+jest.mock("expo-audio", () => ({
+  useAudioPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    seekTo: jest.fn(),
+  })),
+}));
+
 describe("RandomThrowsGame", () => {
   const mockTargets = ["S-20", "D-20", "T-20"];
 

@@ -7,6 +7,13 @@ jest.mock("expo-router", () => ({
   },
 }));
 
+jest.mock("expo-audio", () => ({
+  useAudioPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    seekTo: jest.fn(),
+  })),
+}));
+
 describe("AroundTheClock Screen", () => {
   it("renders the title", async () => {
     const { getByText } = await render(<AroundTheClock />);

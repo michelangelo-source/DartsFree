@@ -1,4 +1,5 @@
 import { commonStyles } from "@/styles/commonStyle";
+import { useAudioPlayer } from "expo-audio";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -15,12 +16,17 @@ export const RandomThrowsGame = ({
   const [hits, setHits] = useState(0);
   const [totalAttempted, setTotalAttempted] = useState(0);
 
+  const scorePlayer = useAudioPlayer(require("@/assets/sounds/ScoreSound.mp3"));
+  const missPlayer = useAudioPlayer(require("@/assets/sounds/MissSound.mp3"));
+
   const currentTarget = targets[currentIndex];
   const percentage =
     totalAttempted > 0 ? Math.round((hits / totalAttempted) * 100) : 0;
   const remaining = targets.length - totalAttempted;
 
   const handleHit = () => {
+    scorePlayer.seekTo(0);
+    scorePlayer.play();
     const newHits = hits + 1;
     const newTotal = totalAttempted + 1;
     setHits(newHits);
@@ -33,6 +39,8 @@ export const RandomThrowsGame = ({
   };
 
   const handleMiss = () => {
+    missPlayer.seekTo(0);
+    missPlayer.play();
     const newTotal = totalAttempted + 1;
     setTotalAttempted(newTotal);
     if (newTotal >= targets.length) {
