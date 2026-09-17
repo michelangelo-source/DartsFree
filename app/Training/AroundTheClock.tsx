@@ -1,14 +1,26 @@
 import { FinishedTrainingModal } from "@/components/Modals/FinishedTrainingModal";
 import { commonStyles } from "@/styles/commonStyle";
+import { useAudioPlayer } from "expo-audio";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const AroundTheClock = () => {
   const [hit, setHit] = useState(0);
   const [mis, setMis] = useState(0);
+  
+  const scorePlayer = useAudioPlayer(require("@/assets/sounds/ScoreSound.mp3"));
+  const missPlayer = useAudioPlayer(require("@/assets/sounds/MissSound.mp3"));
+
   const percentage = mis > 0 ? Math.round((hit / mis) * 100) : 0;
   const handleShoot = (isHit: boolean) => {
-    if (isHit) setHit((prev) => prev + 1);
+    if (isHit) {
+      setHit((prev) => prev + 1);
+      scorePlayer.seekTo(0);
+      scorePlayer.play();
+    } else {
+      missPlayer.seekTo(0);
+      missPlayer.play();
+    }
     setMis((prev) => prev + 1);
   };
   const resetTraining = () => {
