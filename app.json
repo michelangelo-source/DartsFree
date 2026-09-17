@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "DartsFree",
-    "slug": "DartsFree",
+    "slug": "dartsfree",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/icon.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.gacekt.DartsFree"
+      "package": "com.gacekt.DartsFree",
+      "versionCode": 1
     },
     "web": {
       "output": "static",
@@ -41,11 +42,19 @@
       "expo-font",
       "expo-image",
       "expo-status-bar",
-      "expo-audio"
+      "expo-audio",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "19b5922b-3117-41f0-85e6-f95280d2cf5b"
+      }
+    },
+    "owner": "gacekt"
   }
 }

@@ -3,13 +3,13 @@ import { DEFAULT_SETTINGS } from "../constans";
 import { useRandomStore } from "../RandomThrowsStore";
 
 describe("RandomThrowsStore", () => {
-  beforeEach(() => {
-    act(() => {
+  beforeEach(async () => {
+    await act(async () => {
       useRandomStore.getState().reset();
     });
   });
 
-  it("should initialize with default state", () => {
+  it("should initialize with default state", async () => {
     const state = useRandomStore.getState();
     expect(state.settings).toEqual(DEFAULT_SETTINGS);
     expect(state.playing).toBe(false);
@@ -18,24 +18,24 @@ describe("RandomThrowsStore", () => {
     expect(state.gameId).toBe(0);
   });
 
-  it("should update settings", () => {
+  it("should update settings", async () => {
     const newSettings = {
       singles: false,
       doubles: true,
       triples: true,
       totalThrows: 30,
     };
-    act(() => {
+    await act(async () => {
       useRandomStore.getState().updateSettings(newSettings);
     });
 
     expect(useRandomStore.getState().settings).toEqual(newSettings);
   });
 
-  it("should start a game and generate targets", () => {
+  it("should start a game and generate targets", async () => {
     const initialGameId = useRandomStore.getState().gameId;
     
-    act(() => {
+    await act(async () => {
       useRandomStore.getState().start();
     });
 
@@ -46,8 +46,8 @@ describe("RandomThrowsStore", () => {
     expect(state.gameId).toBe(initialGameId + 1);
   });
 
-  it("should start a game with empty pool if no target types are selected", () => {
-    act(() => {
+  it("should start a game with empty pool if no target types are selected", async () => {
+    await act(async () => {
       useRandomStore.getState().updateSettings({
         singles: false,
         doubles: false,
@@ -62,8 +62,8 @@ describe("RandomThrowsStore", () => {
     expect(state.playing).toBe(true);
   });
 
-  it("should finish the game and calculate correct result string", () => {
-    act(() => {
+  it("should finish the game and calculate correct result string", async () => {
+    await act(async () => {
       useRandomStore.getState().start();
       useRandomStore.getState().finish(15, 20); // 15 hits out of 20 total throws
     });
@@ -73,8 +73,8 @@ describe("RandomThrowsStore", () => {
     expect(state.playing).toBe(true);
   });
 
-  it("should handle division by zero safely when total is 0", () => {
-    act(() => {
+  it("should handle division by zero safely when total is 0", async () => {
+    await act(async () => {
       useRandomStore.getState().finish(0, 0);
     });
 
@@ -82,8 +82,8 @@ describe("RandomThrowsStore", () => {
     expect(state.result).toBe("0/0 (0%)");
   });
 
-  it("should reset the state to initial values", () => {
-    act(() => {
+  it("should reset the state to initial values", async () => {
+    await act(async () => {
       useRandomStore.getState().start();
       useRandomStore.getState().finish(5, 5);
       useRandomStore.getState().reset();

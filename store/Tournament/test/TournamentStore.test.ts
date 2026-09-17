@@ -53,7 +53,7 @@ describe("TournamentStore", () => {
 
   const mockSetLastDartMultiplier = jest.fn();
 
-  beforeEach(() => {
+  beforeEach(async () => {
     useTournamentStore.setState(initialTournamentState, true);
     jest.clearAllMocks();
 
@@ -66,7 +66,7 @@ describe("TournamentStore", () => {
     });
   });
 
-  it("should initialize with correct default state", () => {
+  it("should initialize with correct default state", async () => {
     const state = useTournamentStore.getState();
 
     expect(state.readyToStart).toBe(false);
@@ -77,29 +77,29 @@ describe("TournamentStore", () => {
     expect(state.currentMatch).toBeNull();
   });
 
-  it("setTournamentTarget should update the target", () => {
-    act(() => {
+  it("setTournamentTarget should update the target", async () => {
+    await act(async () => {
       useTournamentStore.getState().setTournamentTarget(301);
     });
 
     expect(useTournamentStore.getState().target).toBe(301);
   });
 
-  it("setLastDartMultiplier should update the lastDartMultiplier", () => {
-    act(() => {
+  it("setLastDartMultiplier should update the lastDartMultiplier", async () => {
+    await act(async () => {
       useTournamentStore.getState().setLastDartMultiplier(1);
     });
 
     expect(useTournamentStore.getState().lastDartMultiplier).toBe(1);
   });
 
-  it("resetTournament should reset state to initial state", () => {
-    act(() => {
+  it("resetTournament should reset state to initial state", async () => {
+    await act(async () => {
       useTournamentStore.getState().setTournamentTarget(301);
       useTournamentStore.getState().addTournamentParticipants(mockPlayer1);
     });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().resetTournament();
     });
 
@@ -112,8 +112,8 @@ describe("TournamentStore", () => {
     expect(state.currentMatch).toBeNull();
   });
 
-  it("addTournamentParticipants should add a player and set readyToStart to false", () => {
-    act(() => {
+  it("addTournamentParticipants should add a player and set readyToStart to false", async () => {
+    await act(async () => {
       useTournamentStore.getState().addTournamentParticipants(mockPlayer1);
     });
 
@@ -123,13 +123,13 @@ describe("TournamentStore", () => {
     expect(state.readyToStart).toBe(false);
   });
 
-  it("deleteTournamentParticipants should remove a player by name and set readyToStart to false", () => {
+  it("deleteTournamentParticipants should remove a player by name and set readyToStart to false", async () => {
     useTournamentStore.setState({
       tournamentParticipants: [mockPlayer1, mockPlayer2],
       readyToStart: true,
     });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().deleteTournamentParticipants("Alice");
     });
 
@@ -139,7 +139,7 @@ describe("TournamentStore", () => {
     expect(state.readyToStart).toBe(false);
   });
 
-  it("randomizeTournament should shuffle players, generate bracket and set readyToStart to true", () => {
+  it("randomizeTournament should shuffle players, generate bracket and set readyToStart to true", async () => {
     const mockMatches: TournamentMatch[] = [
       {
         id: 1,
@@ -159,7 +159,7 @@ describe("TournamentStore", () => {
       tournamentParticipants: [mockPlayer1, mockPlayer2],
     });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().randomizeTournament();
     });
 
@@ -173,7 +173,7 @@ describe("TournamentStore", () => {
     expect(state.tournamentMatches).toEqual(mockMatches);
   });
 
-  it("startMatch should set currentMatch, isStarted and configure GameStore", () => {
+  it("startMatch should set currentMatch, isStarted and configure GameStore", async () => {
     const mockMatch: TournamentMatch = {
       id: 1,
       round: 1,
@@ -187,7 +187,7 @@ describe("TournamentStore", () => {
 
     useTournamentStore.setState({ target: 701 });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().startMatch(mockMatch);
     });
 
@@ -204,7 +204,7 @@ describe("TournamentStore", () => {
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer2);
   });
 
-  it("startMatch should not reset game if resuming the same match", () => {
+  it("startMatch should not reset game if resuming the same match", async () => {
     const mockMatch: TournamentMatch = {
       id: 1,
       round: 1,
@@ -218,7 +218,7 @@ describe("TournamentStore", () => {
 
     useTournamentStore.setState({ currentMatch: mockMatch });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().startMatch(mockMatch);
     });
 
@@ -228,7 +228,7 @@ describe("TournamentStore", () => {
     expect(mockAddPlayer).not.toHaveBeenCalled();
   });
 
-  it("startMatch should auto-find the next available match if no match is provided", () => {
+  it("startMatch should auto-find the next available match if no match is provided", async () => {
     const match1: TournamentMatch = {
       id: 1,
       round: 1,
@@ -252,14 +252,14 @@ describe("TournamentStore", () => {
 
     useTournamentStore.setState({ tournamentMatches: [match1, match2] });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().startMatch();
     });
 
     expect(useTournamentStore.getState().currentMatch).toEqual(match2);
   });
 
-  it("setWinner should update the current match winner and propagate the winning player to the next match", () => {
+  it("setWinner should update the current match winner and propagate the winning player to the next match", async () => {
     const match1: TournamentMatch = {
       id: 1,
       round: 1,
@@ -296,7 +296,7 @@ describe("TournamentStore", () => {
       currentMatch: match1,
     });
 
-    act(() => {
+    await act(async () => {
       useTournamentStore.getState().setWinner(1);
     });
 
