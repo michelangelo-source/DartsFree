@@ -31,25 +31,21 @@ describe("ExitGameModal Component", () => {
 
   it("subscribes to beforeRemove event on mount", async () => {
     await render(<ExitGameModal />);
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalledWith(
-        "beforeRemove",
-        expect.any(Function)
-      );
-    });
+    expect(mockAddListener).toHaveBeenCalledWith(
+      "beforeRemove",
+      expect.any(Function),
+    );
   });
 
   it("shows the modal when beforeRemove event is triggered", async () => {
     const { getByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent = {
       preventDefault: jest.fn(),
       data: {
@@ -62,24 +58,20 @@ describe("ExitGameModal Component", () => {
     });
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
-    await waitFor(() => {
-      expect(getByText("Are you sure?")).toBeTruthy();
-    });
+    expect(getByText("Are you sure?")).toBeTruthy();
     expect(getByText("Cancel")).toBeTruthy();
     expect(getByText("Exit")).toBeTruthy();
   });
 
   it("hides the modal when Cancel is pressed", async () => {
     const { getByText, queryByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent = {
       preventDefault: jest.fn(),
       data: {
@@ -91,9 +83,7 @@ describe("ExitGameModal Component", () => {
       beforeRemoveCallback(mockEvent);
     });
 
-    await waitFor(() => {
-      expect(getByText("Are you sure?")).toBeTruthy();
-    });
+    expect(getByText("Are you sure?")).toBeTruthy();
 
     const cancelBtn = getByText("Cancel");
     fireEvent.press(cancelBtn);
@@ -105,15 +95,13 @@ describe("ExitGameModal Component", () => {
 
   it("dispatches the saved action when Exit is pressed and action exists", async () => {
     const { getByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent = {
       preventDefault: jest.fn(),
       data: {
@@ -125,9 +113,7 @@ describe("ExitGameModal Component", () => {
       beforeRemoveCallback(mockEvent);
     });
 
-    await waitFor(() => {
-      expect(getByText("Exit")).toBeTruthy();
-    });
+    expect(getByText("Exit")).toBeTruthy();
     const exitBtn = getByText("Exit");
     fireEvent.press(exitBtn);
 
@@ -136,15 +122,13 @@ describe("ExitGameModal Component", () => {
 
   it("uses router.back if no exit action and can go back", async () => {
     const { getByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent = {
       preventDefault: jest.fn(),
       data: {},
@@ -156,9 +140,7 @@ describe("ExitGameModal Component", () => {
       beforeRemoveCallback(mockEvent);
     });
 
-    await waitFor(() => {
-      expect(getByText("Exit")).toBeTruthy();
-    });
+    expect(getByText("Exit")).toBeTruthy();
     const exitBtn = getByText("Exit");
     fireEvent.press(exitBtn);
 
@@ -168,15 +150,13 @@ describe("ExitGameModal Component", () => {
 
   it("uses router.navigate to / if no exit action and cannot go back", async () => {
     const { getByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent = {
       preventDefault: jest.fn(),
       data: {},
@@ -188,9 +168,7 @@ describe("ExitGameModal Component", () => {
       beforeRemoveCallback(mockEvent);
     });
 
-    await waitFor(() => {
-      expect(getByText("Exit")).toBeTruthy();
-    });
+    expect(getByText("Exit")).toBeTruthy();
     const exitBtn = getByText("Exit");
     fireEvent.press(exitBtn);
 
@@ -200,15 +178,13 @@ describe("ExitGameModal Component", () => {
 
   it("does not prevent default if shouldExit is true", async () => {
     const { getByText } = await render(<ExitGameModal />);
-    
-    await waitFor(() => {
-      expect(mockAddListener).toHaveBeenCalled();
-    });
+
+    expect(mockAddListener).toHaveBeenCalled();
 
     const beforeRemoveCallback = mockAddListener.mock.calls.find(
-      (call) => call[0] === "beforeRemove"
+      (call) => call[0] === "beforeRemove",
     )[1];
-    
+
     const mockEvent1 = {
       preventDefault: jest.fn(),
       data: {
@@ -220,11 +196,11 @@ describe("ExitGameModal Component", () => {
       beforeRemoveCallback(mockEvent1);
     });
 
-    await waitFor(() => {
-      expect(getByText("Exit")).toBeTruthy();
-    });
+    expect(getByText("Exit")).toBeTruthy();
     const exitBtn = getByText("Exit");
-    fireEvent.press(exitBtn);
+    await act(async () => {
+      fireEvent.press(exitBtn);
+    });
 
     const mockEvent2 = {
       preventDefault: jest.fn(),
