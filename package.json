@@ -1,5 +1,7 @@
 {
   "name": "dartsfree",
+  "description": "A simple app to count points in darts. Made for personal use with friends.",
+  "license": "GPL-3.0-only",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

@@ -1,50 +1,142 @@
-# Welcome to your Expo app 👋
+# DartsFree
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple app to count points in darts. Nothing fancy — just a handy tool for keeping score when you're playing with friends. Android only for now.
 
-## Get started
+---
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+### Casual Games
 
-2. Start the app
+Classic X01 darts with full scoring support:
 
-   ```bash
-   npx expo start
-   ```
+- **Configurable targets** — 301, 501, 701, or any custom value
+- **Checkout modes** — Single out, Double out, or Master (Triple) out
+- **Multiplayer** — 2+ players with turn tracking
+- **Legs system** — configurable legs-to-win
+- **Full score input** — Singles, Doubles, Triples (1–20), Bull 25, Bullseye 50, Miss, and the classic "Bed & Breakfast" 26 (1 + 5 + 20)
+- **Bust detection** — automatically reverts the visit when a player goes bust
+- **Win detection** — validates the last dart matches the required checkout multiplier
+- **Undo** — undo individual throws, even across player turns
+- **Live stats** — remaining score, 3-dart average, darts thrown, and legs won per player
 
-In the output, you'll find options to open the app in a
+### Tournament Mode
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Single-elimination bracket tournaments:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Auto-generated brackets** — randomised seeding with bye support for non-power-of-2 player counts
+- **Per-round configurable legs** — e.g. Best of 1 in early rounds, Best of 3 in the final
+- **Visual bracket display** — see the full bracket with connecting lines
+- **Winner propagation** — winners automatically advance to the next match
 
-## Get a fresh project
+### Training Modes
 
-When you're ready, run:
+#### Around The Clock
+
+- Aim for numbers 1 → 20 in order
+- Track your hit rate and percentage
+- Finishes when all 20 numbers are completed
+
+#### Random Throws
+
+- **Configurable target pool** — toggle Singles, Doubles, and Triples
+- **Adjustable throw count** (default: 20)
+- Randomly generated target list using Fisher-Yates shuffle
+- Score tracking with hit percentage
+
+### Sound Effects
+
+| Sound    | Trigger                          |
+| -------- | -------------------------------- |
+| Score    | Single dart scored               |
+| Score 3× | Classic 26 (all 3 darts at once) |
+| Miss     | Dart misses the target           |
+| Bust     | Player goes bust                 |
+
+---
+
+## Tech Stack
+
+| Layer            | Technology                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Framework        | [React Native](https://reactnative.dev/) 0.86 + [Expo](https://expo.dev/) SDK 57                                                |
+| Language         | TypeScript 6.0                                                                                                                  |
+| Routing          | [expo-router](https://docs.expo.dev/router/introduction/) (file-based, typed routes)                                            |
+| State Management | [Zustand](https://zustand.docs.pmnd.rs/) 5.0                                                                                    |
+| Animations       | react-native-reanimated 4.5                                                                                                     |
+| Audio            | expo-audio                                                                                                                      |
+| Icons            | [lucide-react-native](https://lucide.dev/) + custom SVGs (via react-native-svg-transformer)                                     |
+| Testing          | [Jest](https://jestjs.io/) 29.7 + [@testing-library/react-native](https://callstack.github.io/react-native-testing-library/) 14 |
+| Linting          | ESLint (Expo config)                                                                                                            |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v24.14.1 (see `.nvmrc`)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- Android Studio (for native builds)
+
+### Installation
 
 ```bash
-npm run reset-project
+# Clone the repository
+git clone https://github.com/your-username/DartsFree.git
+cd DartsFree
+
+# Use the correct Node version
+nvm install
+nvm use
+
+# Install dependencies
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Running the App
 
-## Learn more
+```bash
+# Start the Expo dev server
+npm start
 
-To learn more about developing your project with Expo, look at the following resources:
+# Run on Android
+npm run android
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Testing
 
-Join our community of developers creating universal apps.
+```bash
+# Run the full test suite
+npm test
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The project uses **Jest** with **@testing-library/react-native**. Tests cover hooks, stores, components, and screen-level integration.
+
+---
+
+## CI/CD
+
+Two GitHub Actions workflows are configured:
+
+### On Commit (non-main branches)
+
+- Lint (ESLint)
+- Type Check (TypeScript `tsc --noEmit`)
+- Tests (Jest)
+
+### PR to Develop
+
+- Security Audit (`npm audit`)
+- Lint
+- Type Check
+- Tests
+- Expo Build Verification (`expo export --platform android`)
+
+---
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](./LICENSE).
