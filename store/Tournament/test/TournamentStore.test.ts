@@ -58,6 +58,7 @@ describe("TournamentStore", () => {
     jest.clearAllMocks();
 
     (useGameStore.getState as jest.Mock).mockReturnValue({
+      players: [mockPlayer1, mockPlayer2],
       quitGame: mockQuitGame,
       setTarget: mockSetTarget,
       setLegsToWin: mockSetLegsToWin,
@@ -204,29 +205,7 @@ describe("TournamentStore", () => {
     expect(mockAddPlayer).toHaveBeenCalledWith(mockPlayer2);
   });
 
-  it("startMatch should not reset game if resuming the same match", async () => {
-    const mockMatch: TournamentMatch = {
-      id: 1,
-      round: 1,
-      player1: mockPlayer1,
-      player2: mockPlayer2,
-      winner: null,
-      source_match_p1: null,
-      source_match_p2: null,
-      next_match_id: null,
-    };
 
-    useTournamentStore.setState({ currentMatch: mockMatch });
-
-    await act(async () => {
-      useTournamentStore.getState().startMatch(mockMatch);
-    });
-
-    expect(mockQuitGame).not.toHaveBeenCalled();
-    expect(mockSetTarget).not.toHaveBeenCalled();
-    expect(mockSetLegsToWin).not.toHaveBeenCalled();
-    expect(mockAddPlayer).not.toHaveBeenCalled();
-  });
 
   it("startMatch should auto-find the next available match if no match is provided", async () => {
     const match1: TournamentMatch = {

@@ -6,6 +6,7 @@ import { ScorePreviewPanel } from "@/components/Game/ScorePreviewPanel";
 import { ExitGameModal } from "@/components/Modals/ExitGameModal";
 import { FinishedGameModal } from "@/components/Modals/FinishedGameModal";
 import { useGame } from "@/hooks/useGame";
+import { useGameStore } from "@/store/GameStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -82,7 +83,7 @@ const Game = () => {
         resetOrder={() => setCurrentPlayerIndex(0)}
         winner={currentPlayer}
       />
-      <ExitGameModal />
+      <ExitGameModal disabled={finished} />
     </View>
   );
 };

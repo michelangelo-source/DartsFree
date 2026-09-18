@@ -7,6 +7,7 @@ import { FinishedGameModal } from "../../Modals/FinishedGameModal";
 jest.mock("expo-router", () => ({
   router: {
     navigate: jest.fn(),
+    back: jest.fn(),
   },
 }));
 
@@ -84,7 +85,7 @@ describe("FinishedGameModal Component", () => {
       const quitButton = getByText("Quit Game");
       fireEvent.press(quitButton);
 
-      expect(mockSetOpen).toHaveBeenCalledWith(false);
+      expect(mockSetOpen).not.toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith("/MainMenu");
       expect(mockQuitGame).toHaveBeenCalled();
     });
@@ -131,8 +132,8 @@ describe("FinishedGameModal Component", () => {
       const bracketButton = getByText("See Bracket");
       fireEvent.press(bracketButton);
 
-      expect(mockSetOpen).toHaveBeenCalledWith(false);
-      expect(router.navigate).toHaveBeenCalledWith("/Tournament");
+      expect(mockSetOpen).not.toHaveBeenCalled();
+      expect(router.back).toHaveBeenCalled();
       expect(mockQuitGame).toHaveBeenCalled();
     });
 
@@ -152,7 +153,7 @@ describe("FinishedGameModal Component", () => {
       expect(mockQuitGame).toHaveBeenCalled();
       expect(mockSetOpen).toHaveBeenCalledWith(false);
       expect(mockStartMatch).toHaveBeenCalled();
-      expect(router.navigate).toHaveBeenCalledWith("/Game");
+      expect(router.navigate).not.toHaveBeenCalled();
     });
   });
 
@@ -189,8 +190,8 @@ describe("FinishedGameModal Component", () => {
       const bracketButton = getByText("See Bracket");
       fireEvent.press(bracketButton);
 
-      expect(mockSetOpen).toHaveBeenCalledWith(false);
-      expect(router.navigate).toHaveBeenCalledWith("/Tournament");
+      expect(mockSetOpen).not.toHaveBeenCalled();
+      expect(router.back).toHaveBeenCalled();
       expect(mockNextLeg).toHaveBeenCalledWith("Alice");
       expect(mockResetOrder).toHaveBeenCalled();
       expect(mockQuitGame).not.toHaveBeenCalled();
