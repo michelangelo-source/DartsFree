@@ -46,8 +46,7 @@ export const FinishedGameModal = ({
               <>
                 <Pressable
                   onPress={() => {
-                    setOpen(!open);
-                    router.navigate("/Tournament");
+                    router.back();
                     quitGame();
                   }}
                   style={styles.bracketBtn}
@@ -60,7 +59,6 @@ export const FinishedGameModal = ({
                       quitGame();
                       setOpen(!open);
                       startMatch();
-                      router.navigate("/Game");
                     }}
                     style={styles.nextMatchBtn}
                   >
@@ -75,10 +73,8 @@ export const FinishedGameModal = ({
                     if (isStarted) {
                       nextLeg(winner.name);
                       resetOrder();
-                      setOpen(!open);
-                      router.navigate("/Tournament");
+                      router.back();
                     } else {
-                      setOpen(!open);
                       router.navigate("/MainMenu");
                       quitGame();
                     }

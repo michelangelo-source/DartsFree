@@ -1,8 +1,8 @@
 import { ExitGameModal } from "@/components/Modals/ExitGameModal";
-import { useGameStore } from "@/store/GameStore";
 import { ManagePlayers } from "@/components/SetupGame/ManagePlayers";
 import { ManageScore } from "@/components/SetupGame/ManageScore";
 import { Bracket } from "@/components/Tournament/Bracket/Bracket";
+import { useGameStore } from "@/store/GameStore";
 import {
   TournamentMatch,
   useTournamentStore,
@@ -27,6 +27,7 @@ const Tournament = () => {
     target,
     isStarted,
     tournamentParticipants,
+    tournamentMatches,
     setTournamentTarget,
     startMatch,
     addTournamentParticipants,
@@ -35,6 +36,9 @@ const Tournament = () => {
     resetTournament,
     setLastDartMultiplier,
   } = useTournamentStore();
+
+  const isTournamentFinished =
+    tournamentMatches.length > 0 && tournamentMatches.at(-1)?.winner !== null;
 
   useEffect(() => {
     return () => {
@@ -92,7 +96,7 @@ const Tournament = () => {
           </Pressable>
         )}
 
-        {readyToStart && (
+        {readyToStart && !isTournamentFinished && (
           <Pressable
             disabled={tournamentParticipants.length < 2}
             onPress={() => handleStart()}
@@ -109,7 +113,9 @@ const Tournament = () => {
         scrollY={scrollY}
         handleStart={handleStart}
       />
-      {!!tournamentParticipants.length && <ExitGameModal />}
+      {!!tournamentParticipants.length && (
+        <ExitGameModal />
+      )}
     </Animated.ScrollView>
   );
 };

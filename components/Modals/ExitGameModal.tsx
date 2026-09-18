@@ -1,9 +1,14 @@
+import { useGameStore } from "@/store/GameStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
-export const ExitGameModal = () => {
+type ExitGameModalProps = {
+  disabled?: boolean;
+};
+
+export const ExitGameModal = ({ disabled = false }: ExitGameModalProps) => {
   const navigation = useNavigation();
   const [isExitDialogVisible, setIsExitDialogVisible] =
     useState<boolean>(false);
@@ -12,7 +17,7 @@ export const ExitGameModal = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      if (shouldExit.current) {
+      if (shouldExit.current || disabled) {
         return;
       }
       e.preventDefault();
@@ -21,7 +26,7 @@ export const ExitGameModal = () => {
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, disabled]);
 
   return (
     <Modal
@@ -47,6 +52,7 @@ export const ExitGameModal = () => {
                 onPress={() => {
                   setIsExitDialogVisible(false);
                   shouldExit.current = true;
+                  useGameStore.getState().quitGame();
                   if (exitAction.current) {
                     navigation.dispatch(exitAction.current);
                   } else {

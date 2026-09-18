@@ -84,6 +84,7 @@ describe("Tournament Screen", () => {
     target: 501,
     isStarted: false,
     tournamentParticipants: [],
+    tournamentMatches: [],
     setTournamentTarget: mockSetTournamentTarget,
     startMatch: mockStartMatch,
     addTournamentParticipants: mockAddTournamentParticipants,

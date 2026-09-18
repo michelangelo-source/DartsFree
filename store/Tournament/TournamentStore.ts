@@ -140,7 +140,10 @@ export const useTournamentStore = create<Tournament>()((set, get, store) => ({
     if (matchToStart) {
       const gameStore = useGameStore.getState();
 
-      if (state.currentMatch?.id !== matchToStart.id) {
+      if (
+        state.currentMatch?.id !== matchToStart.id ||
+        gameStore.players.length === 0
+      ) {
         gameStore.quitGame();
         gameStore.setLastDartMultiplier(state.lastDartMultiplier);
         gameStore.setTarget(state.target);
