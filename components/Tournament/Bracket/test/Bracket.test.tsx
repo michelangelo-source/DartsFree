@@ -70,6 +70,8 @@ describe("Bracket Component", () => {
       legsToWin: [],
       setLegToWin: jest.fn(),
       tournamentMatches: [],
+      target: 501,
+      lastDartMultiplier: 2,
     });
   });
 
@@ -87,6 +89,8 @@ describe("Bracket Component", () => {
       readyToStart: false,
       legsToWin: [],
       setLegToWin: jest.fn(),
+      target: 501,
+      lastDartMultiplier: 2,
       tournamentMatches: [
         {
           id: "match-1",
@@ -116,6 +120,8 @@ describe("Bracket Component", () => {
       readyToStart: true,
       legsToWin: [],
       setLegToWin: jest.fn(),
+      target: 501,
+      lastDartMultiplier: 2,
       tournamentMatches: [mockMatch],
     });
 
@@ -134,6 +140,8 @@ describe("Bracket Component", () => {
       readyToStart: true,
       legsToWin: [],
       setLegToWin: jest.fn(),
+      target: 501,
+      lastDartMultiplier: 2,
       tournamentMatches: [
         {
           id: "match-1",
@@ -155,6 +163,31 @@ describe("Bracket Component", () => {
       readyToStart: false,
       legsToWin: [],
       setLegToWin: jest.fn(),
+      target: 501,
+      lastDartMultiplier: 2,
+      tournamentMatches: [
+        {
+          id: "match-1",
+          round: 1,
+          player1: { name: "Alice" },
+          player2: { name: "Bob" },
+          winner: null,
+        },
+      ],
+    });
+
+    const { queryByTestId } = await render(<Bracket {...defaultProps} />);
+
+    expect(queryByTestId("play-icon")).toBeNull();
+  });
+
+  it("does not show the Play button if target is less than lastDartMultiplier", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      readyToStart: true,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
+      target: 1,
+      lastDartMultiplier: 2,
       tournamentMatches: [
         {
           id: "match-1",

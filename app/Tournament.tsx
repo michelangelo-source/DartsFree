@@ -80,12 +80,12 @@ const Tournament = () => {
       <View style={[commonStyles.row, styles.btnContainer]}>
         {!isStarted && (
           <Pressable
-            disabled={tournamentParticipants.length < 2}
+            disabled={tournamentParticipants.length < 2 || target < lastDartMultiplier}
             onPress={() => {
               randomizeTournament();
             }}
             style={[
-              { borderWidth: readyToStart ? 0 : 2 },
+              tournamentParticipants.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
               styles.shuffleBtn,
               commonStyles.glassPanel,
             ]}
@@ -98,9 +98,13 @@ const Tournament = () => {
 
         {readyToStart && !isTournamentFinished && (
           <Pressable
-            disabled={tournamentParticipants.length < 2}
+            disabled={tournamentParticipants.length < 2 || target < lastDartMultiplier}
             onPress={() => handleStart()}
-            style={[styles.nextMatchBtn, commonStyles.glassPanel]}
+            style={[
+              tournamentParticipants.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
+              styles.nextMatchBtn,
+              commonStyles.glassPanel,
+            ]}
           >
             <Text style={[commonStyles.text, styles.shuffleBtnText]}>
               Next Match
@@ -131,7 +135,6 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "green",
   },
   nextMatchBtn: {
     flex: 1,
@@ -139,8 +142,6 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "green",
-    borderWidth: 2,
   },
   shuffleBtnText: { textAlign: "center" },
 });

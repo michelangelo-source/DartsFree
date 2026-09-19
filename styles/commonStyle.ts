@@ -23,4 +23,12 @@ export const commonStyles = StyleSheet.create({
     fontSize: 100,
     textAlignVertical: "center",
   },
+  primaryButton: {
+    borderWidth: 2,
+    borderColor: "green",
+  },
+  disabledButton: {
+    opacity: 0.5,
+    borderWidth: 0,
+  },
 });

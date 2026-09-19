@@ -43,7 +43,7 @@ export const Bracket = ({
   scrollY,
   handleStart,
 }: BracketProps) => {
-  const { readyToStart, isStarted, tournamentMatches, legsToWin, setLegToWin } =
+  const { readyToStart, isStarted, tournamentMatches, legsToWin, setLegToWin, target, lastDartMultiplier } =
     useTournamentStore();
   const { height, width } = useWindowDimensions();
   const translateX = useSharedValue(0);
@@ -215,7 +215,8 @@ export const Bracket = ({
                   {match.player1 &&
                     match.player2 &&
                     !match.winner &&
-                    readyToStart && (
+                    readyToStart &&
+                    target >= lastDartMultiplier && (
                       <Pressable
                         onPress={() => handleStart(match)}
                         style={styles.playButton}

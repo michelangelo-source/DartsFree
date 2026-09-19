@@ -1,5 +1,5 @@
-import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { useGameStore } from "@/store/GameStore";
+import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { act, fireEvent, render } from "@testing-library/react-native";
 import React from "react";
 import { Text, View } from "react-native";
@@ -138,6 +138,41 @@ describe("Tournament Screen", () => {
     const shuffleButton = getByText("Shuffle").parent;
 
     expect(shuffleButton?.props.accessibilityState?.disabled).toBe(true);
+  });
+
+  it("disables shuffle button when target is less than lastDartMultiplier", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      target: 1,
+      lastDartMultiplier: 2,
+      tournamentParticipants: [
+        { name: "Alice", score: 0 },
+        { name: "Bob", score: 0 },
+      ],
+    });
+
+    const { getByText } = await render(<Tournament />);
+    const shuffleButton = getByText("Shuffle").parent;
+
+    expect(shuffleButton?.props.accessibilityState?.disabled).toBe(true);
+  });
+
+  it("disables Next Match button when target is less than lastDartMultiplier", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      readyToStart: true,
+      target: 1,
+      lastDartMultiplier: 2,
+      tournamentParticipants: [
+        { name: "Alice", score: 0 },
+        { name: "Bob", score: 0 },
+      ],
+    });
+
+    const { getByText } = await render(<Tournament />);
+    const nextMatchButton = getByText("Next Match").parent;
+
+    expect(nextMatchButton?.props.accessibilityState?.disabled).toBe(true);
   });
 
   it("enables shuffle button and triggers randomizeTournament when pressed with 2 or more participants", async () => {
