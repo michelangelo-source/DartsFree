@@ -39,10 +39,12 @@ const CasualGames = () => {
         addPlayer={addPlayer}
         deletePlayer={deletePlayer}
       />
-      <Link href={"/Game"} disabled={players.length < 2} asChild>
+      <Link href={"/Game"} disabled={players.length < 2 || target < lastDartMultiplier} asChild>
         <Pressable
+          disabled={players.length < 2 || target < lastDartMultiplier}
           testID="start-button"
           style={StyleSheet.flatten([
+            players.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
             styles.startGameBtn,
             commonStyles.glassPanel,
           ])}
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
   startGameBtn: {
     height: 50,
     margin: 10,
-    backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "stretch",

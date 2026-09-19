@@ -6,7 +6,6 @@ import { ScorePreviewPanel } from "@/components/Game/ScorePreviewPanel";
 import { ExitGameModal } from "@/components/Modals/ExitGameModal";
 import { FinishedGameModal } from "@/components/Modals/FinishedGameModal";
 import { useGame } from "@/hooks/useGame";
-import { useGameStore } from "@/store/GameStore";
 import { commonStyles } from "@/styles/commonStyle";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -65,13 +64,12 @@ const Game = () => {
         >
           <Text>Undo last throw</Text>
         </Pressable>
-        {/* add some animation when isTurnOver */}
         <Pressable
           onPress={nextPlayer}
           style={[
             styles.score,
             commonStyles.glassPanel,
-            isTurnOver && styles.nextPlayerReady,
+            isTurnOver && commonStyles.primaryButton,
           ]}
         >
           <Text>Next Player</Text>
@@ -112,9 +110,5 @@ const styles = StyleSheet.create({
   undoNextPlayerContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-  },
-  nextPlayerReady: {
-    borderColor: "green",
-    borderWidth: 2,
   },
 });

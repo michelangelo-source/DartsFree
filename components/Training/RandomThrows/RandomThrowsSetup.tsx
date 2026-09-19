@@ -103,7 +103,7 @@ export const RandomThrowsSetup = ({ onStart }: RandomThrowsSetupProps) => {
         style={[
           commonStyles.glassPanel,
           styles.startButton,
-          !canStart && styles.startButtonDisabled,
+          !canStart ? commonStyles.disabledButton : commonStyles.primaryButton,
         ]}
         onPress={canStart ? onStart : undefined}
       >
@@ -156,10 +156,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     marginTop: 10,
-    borderColor: "green",
-    borderWidth: 2,
-  },
-  startButtonDisabled: {
-    borderWidth: 0,
   },
 });
