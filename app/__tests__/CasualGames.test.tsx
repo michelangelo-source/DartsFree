@@ -60,22 +60,19 @@ describe("CasualGames Screen", () => {
     expect(getByTestId("manage-players-mock")).toBeTruthy();
   });
 
-  it("disables the start button if there are less than 2 players", async () => {
+  it("disables the start button if there are less than 1 player", async () => {
     const { getByTestId } = await render(<CasualGames />);
     const startButton = getByTestId("start-button");
 
     expect(startButton.props.accessibilityState?.disabled).toBe(true);
   });
 
-  it("enables the start button if there are 2 or more players", async () => {
+  it("enables the start button if there is 1 or more players", async () => {
     (useGameStore as unknown as jest.Mock).mockReturnValue({
       target: 501,
       lastDartMultiplier: 2,
       setTarget: mockSetTarget,
-      players: [
-        { name: "Alice", score: 0 },
-        { name: "Bob", score: 0 },
-      ],
+      players: [{ name: "Alice", score: 0 }],
       addPlayer: mockAddPlayer,
       deletePlayer: mockDeletePlayer,
       quitGame: jest.fn(),

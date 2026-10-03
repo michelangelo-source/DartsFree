@@ -39,12 +39,18 @@ const CasualGames = () => {
         addPlayer={addPlayer}
         deletePlayer={deletePlayer}
       />
-      <Link href={"/Game"} disabled={players.length < 2 || target < lastDartMultiplier} asChild>
+      <Link
+        href={"/Game"}
+        disabled={players.length < 1 || target < lastDartMultiplier}
+        asChild
+      >
         <Pressable
-          disabled={players.length < 2 || target < lastDartMultiplier}
+          disabled={players.length < 1 || target < lastDartMultiplier}
           testID="start-button"
           style={StyleSheet.flatten([
-            players.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
+            players.length < 1 || target < lastDartMultiplier
+              ? commonStyles.disabledButton
+              : commonStyles.primaryButton,
             styles.startGameBtn,
             commonStyles.glassPanel,
           ])}

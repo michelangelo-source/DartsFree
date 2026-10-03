@@ -29,9 +29,10 @@ const Game = () => {
   } = useGame();
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={players}
+        style={styles.playerList}
         showsHorizontalScrollIndicator={false}
         horizontal={true}
         keyExtractor={(item) => item.name}
@@ -44,14 +45,13 @@ const Game = () => {
           />
         )}
       />
-      <View style={{ flexDirection: "row", position: "relative" }}>
+      <View style={styles.scorePreviewContainer}>
         {bust && <BustBar />}
         <ScorePreviewPanel score={currentThrows.firstThrow} />
         <ScorePreviewPanel score={currentThrows.secondThrow} />
         <ScorePreviewPanel score={currentThrows.thirdThrow} />
       </View>
       <NonStandardScorePanel classicScore={classicScore} addScore={addScore} />
-
       <View style={styles.scorePanelContainer}>
         <ScorePanel multiplier={1} handlePress={addScore} title={"S-"} />
         <ScorePanel multiplier={2} handlePress={addScore} title={"D-"} />
@@ -88,6 +88,16 @@ const Game = () => {
 export default Game;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  playerList: {
+    flexGrow: 0,
+  },
+  scorePreviewContainer: {
+    flexDirection: "row",
+    position: "relative",
+  },
   score: {
     flex: 1,
     alignItems: "center",
@@ -103,9 +113,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scorePanelContainer: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
-    alignItems: "center",
+    alignItems: "stretch",
   },
   undoNextPlayerContainer: {
     flexDirection: "row",
