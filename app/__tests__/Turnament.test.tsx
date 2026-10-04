@@ -3,6 +3,7 @@ import { useTournamentStore } from "@/store/Tournament/TournamentStore";
 import { act, fireEvent, render } from "@testing-library/react-native";
 import React from "react";
 import { Text, View } from "react-native";
+import { router } from "expo-router";
 import Tournament from "../Tournament";
 
 jest.mock("@/store/GameStore", () => ({
@@ -41,8 +42,8 @@ const MockBracket: React.FC<any> = () => (
   <Text testID="bracket-mock">Bracket</Text>
 );
 
-const MockExitGameModal: React.FC<any> = () => (
-  <Text testID="exit-game-modal">Exit</Text>
+const MockExitGameModal: React.FC<any> = (props) => (
+  <Text testID="exit-game-modal" {...props}>Exit</Text>
 );
 
 jest.mock("@/components/SetupGame/ManagePlayers", () => ({
@@ -61,9 +62,10 @@ jest.mock("@/components/Modals/ExitGameModal", () => ({
   ExitGameModal: (props: any) => MockExitGameModal(props),
 }));
 
-jest.mock("expo-router/build/global-state/router", () => ({
+jest.mock("expo-router", () => ({
   router: {
     navigate: jest.fn(),
+    dismissAll: jest.fn(),
   },
 }));
 
@@ -234,5 +236,48 @@ describe("Tournament Screen", () => {
 
     expect(mockResetTournament).toHaveBeenCalled();
     expect(mockQuitGame).toHaveBeenCalled();
+  });
+
+  it("renders Go back button and disables ExitGameModal when tournament is finished", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      tournamentParticipants: [
+        { name: "Alice", score: 0 },
+        { name: "Bob", score: 0 },
+      ],
+      tournamentMatches: [
+        { id: "1", winner: "Alice" }
+      ],
+    });
+
+    const { getByText, getByTestId, queryByText } = await render(<Tournament />);
+
+    expect(getByText("Go back")).toBeTruthy();
+    expect(queryByText("Next Match")).toBeNull();
+    
+    const exitGameModal = getByTestId("exit-game-modal");
+    expect(exitGameModal.props.disabled).toBe(true);
+  });
+
+  it("calls router.dismissAll when Go back button is pressed", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      ...defaultTournamentState,
+      tournamentParticipants: [
+        { name: "Alice", score: 0 },
+        { name: "Bob", score: 0 },
+      ],
+      tournamentMatches: [
+        { id: "1", winner: "Alice" }
+      ],
+    });
+
+    const { getByText } = await render(<Tournament />);
+    const goBackButton = getByText("Go back").parent;
+    
+    await act(async () => {
+      fireEvent.press(goBackButton!);
+    });
+
+    expect(router.dismissAll).toHaveBeenCalledTimes(1);
   });
 });
