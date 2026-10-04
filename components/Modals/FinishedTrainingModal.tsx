@@ -24,7 +24,7 @@ export const FinishedTrainingModal = ({
             <Pressable
               onPress={() => {
                 if (onExit) onExit();
-                router.navigate("/MainMenu");
+                router.dismissAll();
               }}
               style={styles.quitBtn}
             >

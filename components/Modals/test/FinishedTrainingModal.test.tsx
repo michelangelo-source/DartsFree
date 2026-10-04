@@ -5,6 +5,7 @@ import { FinishedTrainingModal } from "../FinishedTrainingModal";
 jest.mock("expo-router", () => ({
   router: {
     navigate: jest.fn(),
+    dismissAll: jest.fn(),
   },
 }));
 
@@ -47,7 +48,7 @@ describe("FinishedTrainingModal Component", () => {
     expect(queryByText("Result:")).toBeNull();
   });
 
-  it("navigates to MainMenu on Exit press and calls onExit", async () => {
+  it("calls dismissAll and onExit on Exit press", async () => {
     const mockOnExit = jest.fn();
     const { getByText } = await render(
       <FinishedTrainingModal {...defaultProps} onExit={mockOnExit} />,
@@ -56,7 +57,7 @@ describe("FinishedTrainingModal Component", () => {
     fireEvent.press(getByText("Exit"));
 
     expect(mockOnExit).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith("/MainMenu");
+    expect(router.dismissAll).toHaveBeenCalled();
   });
 
   it("calls resetTraining on Reset press", async () => {
