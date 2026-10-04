@@ -72,10 +72,11 @@ export const RandomThrowsSetup = ({ onStart }: RandomThrowsSetupProps) => {
             value={settings.totalThrows.toString()}
             onChangeText={(text) => {
               const onlyNumbers = text.replace(/[^0-9]/g, "");
-
+              let val = Number(onlyNumbers);
+              if (val > 1000) val = 1000;
               updateSettings({
                 ...settings,
-                totalThrows: Number(onlyNumbers),
+                totalThrows: val,
               });
             }}
             onEndEditing={() => {
@@ -88,10 +89,12 @@ export const RandomThrowsSetup = ({ onStart }: RandomThrowsSetupProps) => {
           <Pressable
             style={styles.counterButton}
             onPress={() => {
-              updateSettings({
-                ...settings,
-                totalThrows: settings.totalThrows + 1,
-              });
+              if (settings.totalThrows < 1000) {
+                updateSettings({
+                  ...settings,
+                  totalThrows: settings.totalThrows + 1,
+                });
+              }
             }}
           >
             <Plus color={"white"} />

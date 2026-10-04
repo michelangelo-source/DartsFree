@@ -4,25 +4,27 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type RandomThrowsGameProps = {
-  targets: string[];
+  currentTarget: string;
+  totalThrows: number;
+  onNext: () => void;
   onFinish: (hits: number, total: number) => void;
 };
 
 export const RandomThrowsGame = ({
-  targets,
+  currentTarget,
+  totalThrows,
+  onNext,
   onFinish,
 }: RandomThrowsGameProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [hits, setHits] = useState(0);
   const [totalAttempted, setTotalAttempted] = useState(0);
 
   const scorePlayer = useAudioPlayer(require("@/assets/sounds/ScoreSound.mp3"));
   const missPlayer = useAudioPlayer(require("@/assets/sounds/MissSound.mp3"));
 
-  const currentTarget = targets[currentIndex];
   const percentage =
     totalAttempted > 0 ? Math.round((hits / totalAttempted) * 100) : 0;
-  const remaining = targets.length - totalAttempted;
+  const remaining = totalThrows - totalAttempted;
 
   const handleHit = () => {
     scorePlayer.seekTo(0);
@@ -31,10 +33,10 @@ export const RandomThrowsGame = ({
     const newTotal = totalAttempted + 1;
     setHits(newHits);
     setTotalAttempted(newTotal);
-    if (newTotal >= targets.length) {
+    if (newTotal >= totalThrows) {
       onFinish(newHits, newTotal);
     } else {
-      setCurrentIndex((prev) => prev + 1);
+      onNext();
     }
   };
 
@@ -43,8 +45,10 @@ export const RandomThrowsGame = ({
     missPlayer.play();
     const newTotal = totalAttempted + 1;
     setTotalAttempted(newTotal);
-    if (newTotal >= targets.length) {
+    if (newTotal >= totalThrows) {
       onFinish(hits, newTotal);
+    } else {
+      onNext();
     }
   };
 

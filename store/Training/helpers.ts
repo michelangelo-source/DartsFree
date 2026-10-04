@@ -18,12 +18,4 @@ export const buildTargetPool = (settings: RandomSettings): string[] => {
   return pool;
 };
 
-export const pickRandomTargets = (pool: string[], count: number): string[] => {
-  if (pool.length === 0) return [];
-  const targets: string[] = [];
-  while (targets.length < count) {
-    const shuffled = shuffleArray(pool);
-    targets.push(...shuffled);
-  }
-  return targets.slice(0, count);
-};
+
