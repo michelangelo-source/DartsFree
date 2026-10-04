@@ -8,7 +8,7 @@ import {
   useTournamentStore,
 } from "@/store/Tournament/TournamentStore";
 import { commonStyles } from "@/styles/commonStyle";
-import { router } from "expo-router/build/global-state/router";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -80,12 +80,16 @@ const Tournament = () => {
       <View style={[commonStyles.row, styles.btnContainer]}>
         {!isStarted && (
           <Pressable
-            disabled={tournamentParticipants.length < 2 || target < lastDartMultiplier}
+            disabled={
+              tournamentParticipants.length < 2 || target < lastDartMultiplier
+            }
             onPress={() => {
               randomizeTournament();
             }}
             style={[
-              tournamentParticipants.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
+              tournamentParticipants.length < 2 || target < lastDartMultiplier
+                ? commonStyles.disabledButton
+                : commonStyles.primaryButton,
               styles.shuffleBtn,
               commonStyles.glassPanel,
             ]}
@@ -98,16 +102,34 @@ const Tournament = () => {
 
         {readyToStart && !isTournamentFinished && (
           <Pressable
-            disabled={tournamentParticipants.length < 2 || target < lastDartMultiplier}
+            disabled={
+              tournamentParticipants.length < 2 || target < lastDartMultiplier
+            }
             onPress={() => handleStart()}
             style={[
-              tournamentParticipants.length < 2 || target < lastDartMultiplier ? commonStyles.disabledButton : commonStyles.primaryButton,
+              tournamentParticipants.length < 2 || target < lastDartMultiplier
+                ? commonStyles.disabledButton
+                : commonStyles.primaryButton,
               styles.nextMatchBtn,
               commonStyles.glassPanel,
             ]}
           >
             <Text style={[commonStyles.text, styles.shuffleBtnText]}>
               Next Match
+            </Text>
+          </Pressable>
+        )}
+        {isTournamentFinished && (
+          <Pressable
+            onPress={() => router.dismissAll()}
+            style={[
+              commonStyles.primaryButton,
+              styles.nextMatchBtn,
+              commonStyles.glassPanel,
+            ]}
+          >
+            <Text style={[commonStyles.text, styles.shuffleBtnText]}>
+              Go back
             </Text>
           </Pressable>
         )}
@@ -118,7 +140,7 @@ const Tournament = () => {
         handleStart={handleStart}
       />
       {!!tournamentParticipants.length && (
-        <ExitGameModal />
+        <ExitGameModal disabled={isTournamentFinished} />
       )}
     </Animated.ScrollView>
   );
