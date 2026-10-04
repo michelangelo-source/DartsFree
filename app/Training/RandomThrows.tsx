@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 const RandomThrows = () => {
-  const { playing, targets, result, start, finish, reset, gameId } =
+  const { playing, currentTarget, result, settings, start, nextTarget, finish, reset, gameId } =
     useRandomStore();
 
   useEffect(() => {
@@ -17,8 +17,14 @@ const RandomThrows = () => {
 
   return (
     <View style={styles.container}>
-      {playing && targets.length > 0 ? (
-        <RandomThrowsGame key={gameId} targets={targets} onFinish={finish} />
+      {playing ? (
+        <RandomThrowsGame 
+          key={gameId} 
+          currentTarget={currentTarget} 
+          totalThrows={settings.totalThrows}
+          onNext={nextTarget}
+          onFinish={finish} 
+        />
       ) : (
         <RandomThrowsSetup onStart={start} />
       )}

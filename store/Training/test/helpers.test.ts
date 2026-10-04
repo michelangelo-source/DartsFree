@@ -1,4 +1,4 @@
-import { shuffleArray, buildTargetPool, pickRandomTargets } from "../helpers";
+import { shuffleArray, buildTargetPool } from "../helpers";
 import { SINGLES, DOUBLES, TRIPLES } from "../constans";
 
 describe("Training helpers", () => {
@@ -42,32 +42,6 @@ describe("Training helpers", () => {
       const pool = buildTargetPool(settings);
       expect(pool).toHaveLength(SINGLES.length + DOUBLES.length + TRIPLES.length);
       expect(pool).toEqual([...SINGLES, ...DOUBLES, ...TRIPLES]);
-    });
-  });
-
-  describe("pickRandomTargets", () => {
-    it("should return empty array if pool is empty", () => {
-      expect(pickRandomTargets([], 10)).toEqual([]);
-    });
-
-    it("should return requested number of targets", () => {
-      const pool = ["S-1", "D-1", "T-1"];
-      const targets = pickRandomTargets(pool, 10);
-      expect(targets).toHaveLength(10);
-    });
-
-    it("should repeat elements if count > pool length", () => {
-      const pool = ["S-1"];
-      const targets = pickRandomTargets(pool, 5);
-      expect(targets).toEqual(["S-1", "S-1", "S-1", "S-1", "S-1"]);
-    });
-
-    it("should pick from the pool", () => {
-      const pool = ["S-1", "D-1", "T-1"];
-      const targets = pickRandomTargets(pool, 5);
-      targets.forEach(target => {
-        expect(pool).toContain(target);
-      });
     });
   });
 });

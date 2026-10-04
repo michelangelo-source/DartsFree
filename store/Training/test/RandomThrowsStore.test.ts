@@ -13,7 +13,9 @@ describe("RandomThrowsStore", () => {
     const state = useRandomStore.getState();
     expect(state.settings).toEqual(DEFAULT_SETTINGS);
     expect(state.playing).toBe(false);
-    expect(state.targets).toEqual([]);
+    expect(state.pool).toEqual([]);
+    expect(state.remainingPool).toEqual([]);
+    expect(state.currentTarget).toBe("");
     expect(state.result).toBeNull();
     expect(state.gameId).toBe(0);
   });
@@ -34,7 +36,7 @@ describe("RandomThrowsStore", () => {
 
   it("should start a game and generate targets", async () => {
     const initialGameId = useRandomStore.getState().gameId;
-    
+
     await act(async () => {
       useRandomStore.getState().start();
     });
@@ -42,8 +44,47 @@ describe("RandomThrowsStore", () => {
     const state = useRandomStore.getState();
     expect(state.playing).toBe(true);
     expect(state.result).toBeNull();
-    expect(state.targets).toHaveLength(DEFAULT_SETTINGS.totalThrows);
+    expect(state.pool.length).toBeGreaterThan(0);
+    expect(state.currentTarget).not.toBe("");
     expect(state.gameId).toBe(initialGameId + 1);
+  });
+
+  it("should have remainingPool length independent of totalThrows and repopulate correctly", async () => {
+    const totalThrows = 100;
+
+    await act(async () => {
+      useRandomStore.getState().updateSettings({
+        singles: true,
+        doubles: false,
+        triples: false,
+        totalThrows,
+      });
+      useRandomStore.getState().start();
+    });
+
+    let state = useRandomStore.getState();
+    const expectedPoolLength = 21;
+
+    expect(state.pool).toHaveLength(expectedPoolLength);
+    expect(state.remainingPool).toHaveLength(expectedPoolLength - 1);
+
+    expect(state.remainingPool.length).not.toEqual(totalThrows);
+
+    await act(async () => {
+      for (let i = 0; i < 20; i++) {
+        useRandomStore.getState().nextTarget();
+      }
+    });
+
+    state = useRandomStore.getState();
+    expect(state.remainingPool).toHaveLength(0);
+
+    await act(async () => {
+      useRandomStore.getState().nextTarget();
+    });
+
+    state = useRandomStore.getState();
+    expect(state.remainingPool).toHaveLength(expectedPoolLength - 1);
   });
 
   it("should start a game with empty pool if no target types are selected", async () => {
@@ -58,7 +99,8 @@ describe("RandomThrowsStore", () => {
     });
 
     const state = useRandomStore.getState();
-    expect(state.targets).toEqual([]);
+    expect(state.pool).toEqual([]);
+    expect(state.currentTarget).toBe("");
     expect(state.playing).toBe(true);
   });
 
@@ -92,7 +134,8 @@ describe("RandomThrowsStore", () => {
     const state = useRandomStore.getState();
     expect(state.playing).toBe(false);
     expect(state.result).toBeNull();
-    expect(state.targets).toEqual([]);
+    expect(state.pool).toEqual([]);
+    expect(state.currentTarget).toBe("");
     expect(state.gameId).toBe(0);
   });
 });

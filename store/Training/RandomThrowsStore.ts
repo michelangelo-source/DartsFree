@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { DEFAULT_SETTINGS } from "./constans";
-import { buildTargetPool, pickRandomTargets } from "./helpers";
+import { buildTargetPool, shuffleArray } from "./helpers";
 
 export type RandomSettings = {
   singles: boolean;
@@ -12,7 +12,9 @@ export type RandomSettings = {
 type RandomState = {
   settings: RandomSettings;
   playing: boolean;
-  targets: string[];
+  pool: string[];
+  remainingPool: string[];
+  currentTarget: string;
   result: string | null;
   gameId: number;
 };
@@ -20,6 +22,7 @@ type RandomState = {
 type RandomActions = {
   updateSettings: (settings: RandomSettings) => void;
   start: () => void;
+  nextTarget: () => void;
   finish: (hits: number, total: number) => void;
   reset: () => void;
 };
@@ -29,7 +32,9 @@ type RandomStore = RandomState & RandomActions;
 export const useRandomStore = create<RandomStore>()((set, get, store) => ({
   settings: DEFAULT_SETTINGS,
   playing: false,
-  targets: [],
+  pool: [],
+  remainingPool: [],
+  currentTarget: "",
   result: null,
   gameId: 0,
 
@@ -38,8 +43,20 @@ export const useRandomStore = create<RandomStore>()((set, get, store) => ({
   start: () => {
     const { settings, gameId } = get();
     const pool = buildTargetPool(settings);
-    const targets = pickRandomTargets(pool, settings.totalThrows);
-    set({ targets, playing: true, result: null, gameId: gameId + 1 });
+    const remainingPool = shuffleArray(pool);
+    
+    const currentTarget = remainingPool.pop() || "";
+    set({ pool, remainingPool, currentTarget, playing: true, result: null, gameId: gameId + 1 });
+  },
+
+  nextTarget: () => {
+    const { pool, remainingPool } = get();
+    let nextRemaining = [...remainingPool];
+    if (nextRemaining.length === 0) {
+      nextRemaining = shuffleArray(pool);
+    }
+    const currentTarget = nextRemaining.pop() || "";
+    set({ remainingPool: nextRemaining, currentTarget });
   },
 
   finish: (hits, total) => {

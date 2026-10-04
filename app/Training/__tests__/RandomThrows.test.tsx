@@ -36,9 +36,11 @@ describe("RandomThrows Screen", () => {
   beforeEach(() => {
     (useRandomStore as unknown as jest.Mock).mockReturnValue({
       playing: false,
-      targets: [],
+      currentTarget: "",
+      settings: { totalThrows: 10 },
       result: null,
       start: jest.fn(),
+      nextTarget: jest.fn(),
       finish: jest.fn(),
       reset: jest.fn(),
       gameId: 0,
@@ -60,9 +62,11 @@ describe("RandomThrows Screen", () => {
   it("renders GameScreen when playing and targets are set", async () => {
     (useRandomStore as unknown as jest.Mock).mockReturnValue({
       playing: true,
-      targets: ["S-20"],
+      currentTarget: "S-20",
+      settings: { totalThrows: 10 },
       result: null,
       start: jest.fn(),
+      nextTarget: jest.fn(),
       finish: jest.fn(),
       reset: jest.fn(),
       gameId: 1,
