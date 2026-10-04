@@ -35,7 +35,11 @@ export const ManageScore = ({
         value={target.toString()}
         onChangeText={(value) => {
           const onlyNumbers = value.replace(/[^0-9]/g, "");
-          setTarget(Number(onlyNumbers));
+          let num = Number(onlyNumbers);
+          if (num > 99999) {
+            num = 99999;
+          }
+          setTarget(num);
         }}
         onEndEditing={() => {
           if (target < lastDartMultiplier) {

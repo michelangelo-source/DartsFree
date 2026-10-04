@@ -130,4 +130,23 @@ describe("ManageScore Component", () => {
 
     expect(mockSetTarget).toHaveBeenCalledWith(301);
   });
+
+  it("caps the target score at 99999 when typing a larger number", async () => {
+    const { getByTestId } = await render(
+      <ManageScore
+        target={501}
+        setTarget={mockSetTarget}
+        lastDartMultiplier={2}
+        setLastDartMultiplier={mockSetLastDartMultiplier}
+      />,
+    );
+
+    const targetInput = getByTestId("target-input");
+
+    await act(async () => {
+      fireEvent.changeText(targetInput, "123456");
+    });
+
+    expect(mockSetTarget).toHaveBeenCalledWith(99999);
+  });
 });
