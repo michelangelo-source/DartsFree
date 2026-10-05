@@ -14,7 +14,12 @@ describe("PlayerCard Component", () => {
     target: 501,
     isCurrentPlayer: true,
     player: mockPlayer,
+    playerCount: 3,
   };
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   it("displays player name correctly", async () => {
     const { getByText } = await render(<PlayerCard {...defaultProps} />);
@@ -42,5 +47,35 @@ describe("PlayerCard Component", () => {
     );
 
     expect(getByText("0")).toBeTruthy();
+  });
+
+  it("calculates correct width for 1 player (screenWidth - 20)", async () => {
+    const { getByTestId } = await render(
+      <PlayerCard {...defaultProps} playerCount={1} />,
+    );
+    const card = getByTestId("player-card");
+    expect(card.props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ width: 730 })]),
+    );
+  });
+
+  it("calculates correct width for 2 players (screenWidth / 2 - 20)", async () => {
+    const { getByTestId } = await render(
+      <PlayerCard {...defaultProps} playerCount={2} />,
+    );
+    const card = getByTestId("player-card");
+    expect(card.props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ width: 355 })]),
+    );
+  });
+
+  it("calculates correct width for 3 or more players (screenWidth / 3 - 20)", async () => {
+    const { getByTestId } = await render(
+      <PlayerCard {...defaultProps} playerCount={4} />,
+    );
+    const card = getByTestId("player-card");
+    expect(card.props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ width: 230 })]),
+    );
   });
 });
