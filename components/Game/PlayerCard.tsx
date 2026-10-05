@@ -5,19 +5,30 @@ type PlayerCardProps = {
   target: number;
   isCurrentPlayer: boolean;
   player: Player;
+  playerCount: number;
 };
 export const PlayerCard = ({
   isCurrentPlayer,
   player,
   target,
+  playerCount,
 }: PlayerCardProps) => {
   const { width: screenWidth } = useWindowDimensions();
+  
+  let cardWidth = screenWidth / 3 - 20;
+  if (playerCount === 1) {
+    cardWidth = screenWidth - 20;
+  } else if (playerCount === 2) {
+    cardWidth = screenWidth / 2 - 20;
+  }
+
   return (
     <View
+      testID="player-card"
       style={[
         styles.container,
         commonStyles.glassPanel,
-        { width: screenWidth / 3 - 20, borderWidth: isCurrentPlayer ? 1 : 0 },
+        { width: cardWidth, borderWidth: isCurrentPlayer ? 1 : 0 },
       ]}
     >
       <Text numberOfLines={1} style={styles.nameText}>

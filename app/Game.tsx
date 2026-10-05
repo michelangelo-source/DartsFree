@@ -42,6 +42,7 @@ const Game = () => {
             target={target}
             isCurrentPlayer={currentPlayerIndex === index}
             player={player}
+            playerCount={players.length}
           />
         )}
       />
