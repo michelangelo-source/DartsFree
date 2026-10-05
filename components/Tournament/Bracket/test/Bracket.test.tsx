@@ -4,8 +4,10 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Bracket } from "../Bracket";
 
-const MockAnimatedView: React.FC<any> = ({ children, testID }) => (
-  <View testID={testID || "animated-view"}>{children}</View>
+const MockAnimatedView: React.FC<any> = ({ children, testID, style }) => (
+  <View testID={testID || "animated-view"} style={style}>
+    {children}
+  </View>
 );
 
 jest.mock("react-native-reanimated", () => ({
@@ -202,5 +204,31 @@ describe("Bracket Component", () => {
     const { queryByTestId } = await render(<Bracket {...defaultProps} />);
 
     expect(queryByTestId("play-icon")).toBeNull();
+  });
+
+  it("stretches the map width to at least screen width minus EXTRA_SCROLL_SPACE", async () => {
+    (useTournamentStore as unknown as jest.Mock).mockReturnValue({
+      readyToStart: false,
+      legsToWin: [],
+      setLegToWin: jest.fn(),
+      target: 501,
+      lastDartMultiplier: 2,
+      tournamentMatches: [
+        {
+          id: "match-1",
+          round: 1,
+          player1: { name: "Alice" },
+          player2: { name: "Bob" },
+          winner: null,
+        },
+      ],
+    });
+
+    const { getAllByTestId } = await render(<Bracket {...defaultProps} />);
+    const animatedViews = getAllByTestId("animated-view");
+
+    expect(animatedViews[0].props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ width: 730 })]),
+    );
   });
 });
