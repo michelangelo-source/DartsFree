@@ -2,6 +2,8 @@
 
 A simple app to count points in darts. Nothing fancy — just a handy tool for keeping score when you're playing with friends. Android only for now.
 
+![Main Menu](./docs/screenshots/main_menu.jpg)
+
 ---
 
 ## Features
@@ -9,6 +11,8 @@ A simple app to count points in darts. Nothing fancy — just a handy tool for k
 ### Casual Games
 
 Classic X01 darts with full scoring support:
+
+![Game Scoring View](./docs/screenshots/game_view.jpg)
 
 - **Configurable targets** — 301, 501, 701, or any custom value
 - **Checkout modes** — Single out, Double out, or Master (Triple) out
@@ -23,6 +27,8 @@ Classic X01 darts with full scoring support:
 ### Tournament Mode
 
 Single-elimination bracket tournaments:
+
+![Tournament Bracket](./docs/screenshots/bracket.jpg)
 
 - **Auto-generated brackets** — randomised seeding with bye support for non-power-of-2 player counts
 - **Per-round configurable legs** — e.g. Best of 1 in early rounds, Best of 3 in the final
@@ -43,6 +49,10 @@ Single-elimination bracket tournaments:
 - **Adjustable throw count** (default: 20)
 - Randomly generated target list using Fisher-Yates shuffle
 - Score tracking with hit percentage
+
+![Random Throws Menu](./docs/screenshots/random_throws_menu.jpg)
+
+![Training Session View](./docs/screenshots/training_view.jpg)
 
 ### Sound Effects
 
